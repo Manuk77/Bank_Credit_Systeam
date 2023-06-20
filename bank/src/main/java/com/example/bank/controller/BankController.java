@@ -2,8 +2,9 @@ package com.example.bank.controller;
 
 
 
+import com.example.bank.customer.creating_requests.requests.CustomerRequest;
 import com.example.bank.customer.dto.*;
-import com.example.bank.customer.response.CustomerResponse;
+import com.example.bank.customer.response.*;
 import com.example.bank.service.BankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -39,4 +40,42 @@ public class BankController {
         return null;
 
     }
+
+    @PostMapping(value = "save/rejected/customers")
+    public @ResponseBody CustomerResponse saveInfoRejectedCustomers(@RequestBody @NonNull final CustomerRequest customerRequest){
+        // RestTemplate if it rejected
+       if (bankService.saveCustomer(new AddressModel(customerRequest.addressRequest()),
+                new PassportModel(customerRequest.passportRequest()),
+                new CustomerInfoModel(customerRequest.customerInfoRequest()),
+                new CustomerHistoryModel(customerRequest.customerHistoryRequest()),
+                new WorkingPlaceModel(customerRequest.workingPlaceRequest())))
+           return new CustomerResponse(AddressResponse.getFromRequest(customerRequest.addressRequest()),
+                   PassportResponse.getFromRequest( customerRequest.passportRequest()),
+                   CustomerInfoResponse.getFromRequest(customerRequest.customerInfoRequest()),
+                   WorkingPlaceResponse.getFromRequest(customerRequest.workingPlaceRequest()),
+                   CustomerHistoryResponse.getFromRequest(customerRequest.customerHistoryRequest()));
+       return null;
+    }
+
+    @PostMapping(value = "save/accepted/customers")
+    public @ResponseBody CustomerResponse saveInfoAcceptedCustomers(@RequestBody @NonNull final CustomerRequest customerRequest) {
+        // RestTemplate getFrom ACRA
+
+        if (bankService.saveCustomer(
+                new AddressModel(customerRequest.addressRequest()),
+                new PassportModel(customerRequest.passportRequest()),
+                new CustomerInfoModel(customerRequest.customerInfoRequest()),
+                new CustomerHistoryModel(customerRequest.customerHistoryRequest()),
+                new WorkingPlaceModel(customerRequest.workingPlaceRequest())))
+
+            return new CustomerResponse(AddressResponse.getFromRequest(customerRequest.addressRequest()),
+                    PassportResponse.getFromRequest( customerRequest.passportRequest()),
+                    CustomerInfoResponse.getFromRequest(customerRequest.customerInfoRequest()),
+                    WorkingPlaceResponse.getFromRequest(customerRequest.workingPlaceRequest()),
+                    CustomerHistoryResponse.getFromRequest(customerRequest.customerHistoryRequest()));
+
+        return null;
+    }
+
+
 }
