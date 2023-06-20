@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 import java.util.List;
+
 @JsonRootName(value = "credits")
 public record CreditResponse(
-
         @JsonProperty("bank_name")
         String bankName,
         @JsonProperty("loan_amount")
@@ -20,27 +20,28 @@ public record CreditResponse(
         String startCreditDate,
         @JsonProperty("end_date")
         String endCreditDate,
-
+        @JsonProperty("is_accepted")
+        String isAccepted,
         @JsonProperty("credit_state")
         String creditState,
-
         @JsonProperty("percent")
         String percent
 ) {
-    public static CreditResponse getFromModel(CreditModel creditModel){
-        return  new
-                CreditResponse(
-                        creditModel.getBankName().toString(),
+    public static CreditResponse getFromModel(CreditModel creditModel) {
+        return new CreditResponse(
+                creditModel.getBankName().toString(),
                 creditModel.getLoanAmount(),
                 creditModel.getCreditType().toString(),
                 creditModel.getPaymentPerMonth(),
                 creditModel.getStartCreditDate().toString(),
                 creditModel.getEndCreditDate().toString(),
+                creditModel.getAccepted().toString(),
                 creditModel.getCreditState().toString(),
                 creditModel.getPercent().toString()
         );
     }
-    public static List<CreditResponse> getListFromModel(List<CreditModel> creditModels){
+
+    public static List<CreditResponse> getListFromModel(List<CreditModel> creditModels) {
         return creditModels.stream()
                 .map(creditModel -> new CreditResponse(
                         creditModel.getBankName().toString(),
@@ -49,8 +50,9 @@ public record CreditResponse(
                         creditModel.getPaymentPerMonth(),
                         creditModel.getStartCreditDate().toString(),
                         creditModel.getEndCreditDate().toString(),
+                        creditModel.getAccepted().toString(),
                         creditModel.getCreditState().toString(),
-                        creditModel.getPercent().toString()  ))
+                        creditModel.getPercent().toString()))
                 .toList();
     }
 }

@@ -37,6 +37,10 @@ public record CreditRequest(
         String endCreditDate,
 
         @NotNullEmptyBlankString
+        @JsonProperty("is_accepted")
+        String isAccepted,
+
+        @NotNullEmptyBlankString
         @JsonProperty("credit_state")
         String creditState,
 

@@ -15,6 +15,7 @@ public class CreditModel {
     private Date startCreditDate;
     private Date endCreditDate;
     private Boolean creditState;
+    private Boolean isAccepted;
     private Byte percent;
 
 
@@ -30,6 +31,7 @@ public class CreditModel {
         this.startCreditDate = creditEntity.getStartCreditDate();
         this.paymentPerMonth = creditEntity.getPaymentPerMonth();
         this.creditState = creditEntity.getCreditState();
+        this.isAccepted = creditEntity.getAccepted();
 
     }
 
@@ -42,6 +44,7 @@ public class CreditModel {
         this.endCreditDate = Date.valueOf(creditRequest.endCreditDate());
         this.bankName = Banks.valueOf(creditRequest.bankName());
         this.creditState = Boolean.valueOf(creditRequest.creditType());
+        this.isAccepted = Boolean.valueOf(creditRequest.isAccepted());
     }
 
 
@@ -105,6 +108,14 @@ public class CreditModel {
 
     public Boolean getCreditState() {
         return creditState;
+    }
+
+    public Boolean getAccepted() {
+        return isAccepted;
+    }
+
+    public void setAccepted(Boolean accepted) {
+        isAccepted = accepted;
     }
 
     public void setCreditState(Boolean creditState) {

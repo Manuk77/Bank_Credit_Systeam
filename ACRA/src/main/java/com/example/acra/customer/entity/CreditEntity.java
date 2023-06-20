@@ -31,6 +31,8 @@ public class CreditEntity {
     private Date endCreditDate;
     @Column(name = "credit_state")
     private Boolean creditState;
+    @Column(name = "is_accepted")
+    private Boolean isAccepted;
     @Column(name = "percent", nullable = false)
     private byte percent;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,7 +43,7 @@ public class CreditEntity {
     public CreditEntity(final Banks bankName, final String loanAmount, final String paymentPerMonth,
                         final Date startCreditDate, final Date endCreditDate, final byte percent,
                         final CustomerHistoryEntity customerHistoryEntity, final CreditType creditType,
-                        final Boolean creditState) {
+                        final Boolean creditState, final Boolean isAccepted) {
 
         this.bankName = Banks.valueOf(bankName.toString());
         this.loanAmount = loanAmount;
@@ -50,6 +52,7 @@ public class CreditEntity {
         this.endCreditDate = endCreditDate;
         this.percent = percent;
         this.creditState = creditState;
+        this.isAccepted = isAccepted;
         this.customerHistoryEntity = customerHistoryEntity;
         this.creditType = CreditType.valueOf(creditType.toString());
 
@@ -65,6 +68,7 @@ public class CreditEntity {
         this.percent = creditModel.getPercent();
         this.creditState = creditModel.getCreditState();
         this.paymentPerMonth = creditModel.getPaymentPerMonth();
+        this.isAccepted = creditModel.getAccepted();
     }
 
     public CreditEntity() {
@@ -137,6 +141,14 @@ public class CreditEntity {
 
     public Boolean getCreditState() {
         return creditState;
+    }
+
+    public Boolean getAccepted() {
+        return isAccepted;
+    }
+
+    public void setAccepted(Boolean accepted) {
+        isAccepted = accepted;
     }
 
     public void setCreditState(Boolean creditState) {
