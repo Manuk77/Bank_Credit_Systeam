@@ -22,7 +22,7 @@ public class CustomerController {
 
 
     @PostMapping(value = "/saveCustomer")
-    public Boolean saveInfo(@RequestBody @NonNull CustomerRequest customerRequest) {
+    public Boolean saveInfo(@RequestBody @NonNull final CustomerRequest customerRequest) {
         return customerService.saveCustomer(
                 new AddressModel(customerRequest.addressRequest()),
                 new PassportModel(customerRequest.passportRequest()),
