@@ -17,6 +17,10 @@ public record NewCreditRequest(
 
         @NotNullEmptyBlankString
         @JsonProperty("creditTime")
-        String creditTime
+        String creditTime,
+
+        @NotNullEmptyBlankString
+        @JsonProperty("bank_name")
+        String bankName
 ) {
 }

@@ -4,10 +4,12 @@ import com.example.bank.customer.dto.*;
 import com.example.bank.customer.entity.*;
 import com.example.bank.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.spel.support.ReflectivePropertyAccessor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BankService {
@@ -48,7 +50,6 @@ public class BankService {
                                 final CustomerInfoModel customerInfoModel,
                                 final CustomerHistoryModel customerHistory,
                                 final WorkingPlaceModel workingPlaceModel) {
-
         return saveAllEntities(new AddressEntity(addressModel), new PassportEntity(passportModel ),
                 new WorkingPlaceEntity(workingPlaceModel), new CustomerHistoryEntity(customerHistory),
                 customerInfoModel, castToCreditEntity(customerHistory.getCreditModels()));

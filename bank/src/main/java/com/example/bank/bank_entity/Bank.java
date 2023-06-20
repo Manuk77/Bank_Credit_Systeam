@@ -17,7 +17,7 @@ public class Bank {
     private String name;
     @Column(name = "foundDate", nullable = false)
     private Date foundDate;
-    @Column(name = "capital", length = 255, nullable = false)
+    @Column(name = "capital", length = 100, nullable = false)
     private String capital;
     @OneToMany(mappedBy = "bank")
     private List<Employee> employees;

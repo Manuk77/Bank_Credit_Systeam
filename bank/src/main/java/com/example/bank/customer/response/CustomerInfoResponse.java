@@ -1,5 +1,6 @@
 package com.example.bank.customer.response;
 
+import com.example.bank.customer.creating_requests.requests.CustomerInfoRequest;
 import com.example.bank.customer.dto.CustomerInfoModel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -30,6 +31,17 @@ public record CustomerInfoResponse(
                 customerInfoModel.getEmail()
         );
 
+    }
+
+    public static CustomerInfoResponse getFromRequest(final CustomerInfoRequest customerInfoRequest) {
+        return new CustomerInfoResponse(
+                customerInfoRequest.firstName(),
+                customerInfoRequest.lastName(),
+                customerInfoRequest.birthDate(),
+                customerInfoRequest.age(),
+                customerInfoRequest.phone(),
+                customerInfoRequest.email()
+        );
     }
 
     @Override

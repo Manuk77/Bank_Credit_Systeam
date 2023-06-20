@@ -1,5 +1,6 @@
 package com.example.bank.customer.creating_requests.requests;
 
+import com.example.bank.customer.response.PassportResponse;
 import com.example.bank.validator.annotation.NotNullEmptyBlankString;
 import com.example.bank.validator.annotation.ValidPassportDates;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -51,7 +52,7 @@ public record PassportRequest(
                 message = "'passport number' must have 2 uppercase letters followed by 7 digits"
         )
         @JsonProperty("passport_number")
-        String passport_number,
+        String passportNumber,
 
         @NotNullEmptyBlankString
         @Pattern(
@@ -78,5 +79,16 @@ public record PassportRequest(
         @JsonProperty("authority")
         String authority
 ) {
+
+        public static PassportRequest getFromResponse(final PassportResponse passportResponse) {
+                return new PassportRequest(passportResponse.firstName(),
+                        passportResponse.lastName(),
+                        passportResponse.birthDate(),
+                        passportResponse.gender(),
+                        passportResponse.passportNumber(),
+                        passportResponse.issueDate(),
+                        passportResponse.expiryDate(),
+                        passportResponse.authority());
+        }
 
 }

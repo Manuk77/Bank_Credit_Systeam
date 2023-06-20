@@ -1,5 +1,6 @@
 package com.example.bank.customer.response;
 
+import com.example.bank.customer.creating_requests.requests.PassportRequest;
 import com.example.bank.customer.dto.PassportModel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -40,6 +41,17 @@ public record PassportResponse(
                 passportModel.getExpiryDate().toString(),
                 passportModel.getAuthority()
         );
+    }
+
+    public static PassportResponse getFromRequest(final PassportRequest passportRequest) {
+       return new PassportResponse( passportRequest.firstName(),
+                passportRequest.lastName(),
+                passportRequest.birthDate(),
+                passportRequest.gender(),
+                passportRequest.passportNumber(),
+                passportRequest.issueDate(),
+                passportRequest.expiryDate(),
+                passportRequest.authority());
     }
 
     @Override

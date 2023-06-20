@@ -18,10 +18,12 @@ public record CreditResponse(
         String paymentPerMonth,
         @JsonProperty("start_date")
         String startCreditDate,
-        @JsonProperty("credit_state")
-        String creditState,
         @JsonProperty("end_date")
         String endCreditDate,
+        @JsonProperty("credit_state")
+        String creditState,
+        @JsonProperty("is_accepted")
+        String isAccepted,
         @JsonProperty("percent")
         String percent
 ) {
@@ -33,8 +35,9 @@ public record CreditResponse(
                 creditModel.getCreditType().toString(),
                 creditModel.getPaymentPerMonth(),
                 creditModel.getStartCreditDate().toString(),
-                creditModel.getCreditState().toString(),
                 creditModel.getEndCreditDate().toString(),
+                creditModel.getCreditState().toString(),
+                creditModel.getAccepted().toString(),
                 creditModel.getPercent().toString()
         );
     }
@@ -46,9 +49,10 @@ public record CreditResponse(
                         creditModel.getCreditType().toString(),
                         creditModel.getPaymentPerMonth(),
                         creditModel.getStartCreditDate().toString(),
-                        creditModel.getCreditState().toString(),
                         creditModel.getEndCreditDate().toString(),
-                        creditModel.getPercent().toString()  ))
+                        creditModel.getCreditState().toString(),
+                        creditModel.getAccepted().toString(),
+                        creditModel.getPercent().toString()))
                 .toList();
     }
 

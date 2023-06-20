@@ -1,5 +1,6 @@
 package com.example.bank.customer.creating_requests.requests;
 
+import com.example.bank.customer.response.CustomerInfoResponse;
 import com.example.bank.validator.annotation.NotNullEmptyBlankString;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
@@ -65,4 +66,12 @@ public record CustomerInfoRequest(
 
 ) {
 
+        public static CustomerInfoRequest getFromResponse(final CustomerInfoResponse customerInfoResponse) {
+                return new CustomerInfoRequest(customerInfoResponse.firstName(),
+                        customerInfoResponse.lastName(),
+                        customerInfoResponse.birthDate(),
+                        customerInfoResponse.age(),
+                        customerInfoResponse.phone(),
+                        customerInfoResponse.email());
+        }
 }

@@ -1,13 +1,11 @@
 package com.example.bank.bank_model.risk_calculating;
-
-
-
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class RiskCalculating {
     private List<RankedModel> rankedModels;
+
+    private List<Double> PD = new ArrayList<>(); // դեֆոլտի հավանականությունը
 
     public RiskCalculating(final List<RankedModel> rankedModels) {
         this.rankedModels = rankedModels;
@@ -27,6 +25,11 @@ public class RiskCalculating {
     public List<Boolean> allRiskCalculations() {
         return riskCounting();
     }
+    public List<Double> getPD() {
+        return PD;
+    }
+
+
 
     /**
      * calculating of y
@@ -73,8 +76,12 @@ public class RiskCalculating {
     private boolean logisticModel(final Double y) {
         final double DPt = 0.824;
         double x = 1 - (1 / (1 + Math.pow(Math.E, y)));
-        System.out.println("x = " + x);
-        return x < DPt;
+        System.out.println("PDi = " + x);
+         if (x < DPt) {
+             PD.add(x);
+             return true;
+         }
+         return false;
     }
 
 

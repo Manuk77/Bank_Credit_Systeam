@@ -1,6 +1,7 @@
 package com.example.bank.customer.creating_requests.requests;
 
 
+import com.example.bank.customer.response.AddressResponse;
 import com.example.bank.validator.annotation.NotNullEmptyBlankString;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Pattern;
@@ -21,4 +22,9 @@ public record AddressRequest(
         @JsonProperty("country")
         String country) {
 
+        public static AddressRequest getFromResponse(final AddressResponse addressResponse) {
+                return new AddressRequest(addressResponse.street(),
+                        addressResponse.city(),
+                        addressResponse.country());
+        }
 }

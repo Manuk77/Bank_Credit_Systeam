@@ -1,5 +1,6 @@
 package com.example.bank.customer.response;
 
+import com.example.bank.customer.creating_requests.requests.WorkingPlaceRequest;
 import com.example.bank.customer.dto.WorkingPlaceModel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -11,11 +12,18 @@ public record WorkingPlaceResponse(
         @JsonProperty("salary")
         String salary
 ) {
-    public static WorkingPlaceResponse getFromModel(WorkingPlaceModel workingPlaceModel){
+    public static WorkingPlaceResponse getFromModel(final WorkingPlaceModel workingPlaceModel){
         return new
                 WorkingPlaceResponse(
                 workingPlaceModel.getName(),
                 workingPlaceModel.getSalary()
+        );
+    }
+
+    public static WorkingPlaceResponse getFromRequest(final WorkingPlaceRequest workingPlaceRequest) {
+        return new WorkingPlaceResponse(
+                workingPlaceRequest.name(),
+                workingPlaceRequest.salary()
         );
     }
 

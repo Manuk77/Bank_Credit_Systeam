@@ -1,5 +1,7 @@
 package com.example.bank.customer.creating_requests.requests;
 
+import com.example.bank.customer.response.CreditResponse;
+import com.example.bank.customer.response.CustomerHistoryResponse;
 import com.example.bank.validator.annotation.NotNullEmptyBlankString;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Pattern;
@@ -38,4 +40,15 @@ public record CustomerHistoryRequest(
         List<CreditRequest> creditRequest
 ) {
 
+        public static CustomerHistoryRequest getFromResponse(final CustomerHistoryResponse customerHistoryResponse) {
+                return new CustomerHistoryRequest(customerHistoryResponse.salary(),
+                        customerHistoryResponse.hasActiveCredit(),
+                        customerHistoryResponse.creditScore(),
+                        convToRequest(customerHistoryResponse.creditResponse()));
+        }
+
+
+        private static List<CreditRequest> convToRequest(final List<CreditResponse> creditResponses) {
+               return creditResponses.stream().map(CreditRequest::getFromResponse).toList();
+        }
 }
