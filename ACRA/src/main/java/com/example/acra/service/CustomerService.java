@@ -102,6 +102,7 @@ public class CustomerService {
                 saveWorkingPlace(workingPlaceEntity);
                 saveCustomerHistory(customerHistory);
                 creditRepository.saveAll(addCreditHistory(creditEntities, customerHistory));
+
                 customerRepository.save(new CustomerEntity(passportEntity, customerHistory,
                         addressEntity, workingPlaceEntity, customerInfoModel));
 
