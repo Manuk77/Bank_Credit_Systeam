@@ -10,6 +10,7 @@ import com.example.bank.customer.creating_requests.requests.CustomerHistoryReque
 import com.example.bank.customer.creating_requests.requests.CustomerRequest;
 import com.example.bank.customer.creating_requests.requests.CustomerRequestFiltered;
 import com.example.bank.customer.response.CustomerResponse;
+import com.example.bank.validator.annotation.NotNullEmptyBlankString;
 import org.springframework.http.*;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +25,13 @@ import java.util.Optional;
 @RequestMapping("/request")
 public class RequestController {
     private static int countOfRequests;
-    private static List<CustomerRequest> customerRequests = new ArrayList<>();
+    private static final List<CustomerRequest> customerRequests = new ArrayList<>();
 
-    private Integer capitalOfBank;
+    private final RiskCalculating riskCalculating = new RiskCalculating();
+    private final Long capitalOfBank = 40_000_000L;
+    private final List<RankedModel> rankedModels = new ArrayList<>();
+    private final List<FilterCustomerInfo> filterCustomerInfos = new ArrayList<>();
+
     @PostMapping("/risk")
     public @ResponseBody Boolean getInfo(@RequestBody @NonNull final CustomerRequestFiltered customerRequestFiltered) {
         final String path = "http://localhost:8080/Customer/getInfo/" + customerRequestFiltered.passportRequest().passportNumber();
@@ -37,8 +42,16 @@ public class RequestController {
                 .orElseGet(() -> getAnswerElse(customerRequestFiltered))) {
             countOfRequests++;
             if (countOfRequests == 10) {
-                //Portfolio portfolio  = new Portfolio(customerRequests,)
+                Portfolio portfolio = new Portfolio(customerRequests, getMathModelFields(riskCalculating.getPD()));
+                for (CustomerRequest customerRequest: portfolio.getOptimalCustomersList()) {
+                    if (!postRejectedRequests(customerRequest)) {
+                        return false;
+                    }
+                }
+                countOfRequests = 0;
+                // portfolio optimization
             }
+            return true;
         }
 
         return false;
@@ -48,44 +61,38 @@ public class RequestController {
 
     private boolean getAnswerElse(final CustomerRequestFiltered customerRequestFiltered) {
 
-        List<RankedModel> rankedModels = new ArrayList<>();
-        List<FilterCustomerInfo> filterCustomerInfos = new ArrayList<>();
         List<CreditRequest> creditRequests = new ArrayList<>();
+        filterCustomerInfos.add(new FilterCustomerInfo(customerRequestFiltered));
+        //rankedModels.add(FilterCustomerInfo.filterCustomerRequest().rankedModel());
+        riskCalculating.setRankedModels(FilterCustomerInfo.filterCustomerRequest().rankedModel());
 
-        filterCustomerInfos.add(new  FilterCustomerInfo(customerRequestFiltered));
-        rankedModels.add(FilterCustomerInfo.filterCustomerRequest().rankedModel());
-        RiskCalculating riskCalculating = new RiskCalculating(rankedModels);
 
-        for (final Boolean b: riskCalculating.allRiskCalculations()) {
-            //System.out.println(b);
+        creditRequests.add(new CreditRequest(customerRequestFiltered.creditRequest().bankName(),
+                customerRequestFiltered.creditRequest().loanAmount(),
+                customerRequestFiltered.creditRequest().creditType(),
+                "0",
+                LocalDate.now().toString(),
+                LocalDate.now().plusMonths(Integer.
+                        parseInt(customerRequestFiltered.creditRequest().creditTime())).toString(),
+                "false",
+                "false",
+                "0"));
+        //System.out.println(b);
+        if (riskCalculating.allRiskCalculations()) {
+            customerRequests.add(
+                    new CustomerRequest(customerRequestFiltered.addressRequest(),
+                            customerRequestFiltered.passportRequest(),
+                            customerRequestFiltered.customerInfoRequest(),
+                            new CustomerHistoryRequest(customerRequestFiltered.workingPlaceRequest().salary(),
+                                    "false",
+                                    "600",
+                                    creditRequests),
+                            customerRequestFiltered.workingPlaceRequest())
+            );
 
-            creditRequests.add( new CreditRequest(customerRequestFiltered.creditRequest().bankName(),
-                    customerRequestFiltered.creditRequest().loanAmount(),
-                    customerRequestFiltered.creditRequest().creditType(),
-                    "0",
-                    LocalDate.now().toString(),
-                    LocalDate.now().plusMonths(Integer.
-                            parseInt(customerRequestFiltered.creditRequest().creditTime())).toString(),
-                    "false",
-                    "false",
-                    "0"));
-
-            if (b) {
-                customerRequests.add(
-                        new CustomerRequest(customerRequestFiltered.addressRequest(),
-                                customerRequestFiltered.passportRequest(),
-                                customerRequestFiltered.customerInfoRequest(),
-                                new CustomerHistoryRequest(customerRequestFiltered.workingPlaceRequest().salary(),
-                                        "false",
-                                        "600",
-                                        creditRequests),
-                                customerRequestFiltered.workingPlaceRequest())
-                );
-
-            }
-
-            return b;
+            return true;
         }
+
 
         return false;
     }
@@ -94,23 +101,20 @@ public class RequestController {
                               final CustomerResponse customerResponse) {
 
 
-        List<RankedModel> rankedModels = new ArrayList<>();
-        List<FilterCustomerInfo> filterCustomerInfos = new ArrayList<>();
 
         filterCustomerInfos.add(new FilterCustomerInfo(customerRequestFiltered, customerResponse));
-        rankedModels.add(FilterCustomerInfo.filterCustomerRequest().rankedModel());
-        RiskCalculating riskCalculating = new RiskCalculating(rankedModels);
-        for (final Boolean b: riskCalculating.allRiskCalculations()) {
+        //rankedModels.add(FilterCustomerInfo.filterCustomerRequest().rankedModel());
+        RiskCalculating riskCalculating = new RiskCalculating(FilterCustomerInfo.filterCustomerRequest().rankedModel());
 
-            if (b) {
+
+            if (riskCalculating.allRiskCalculations()) {
 
                 // customerResponse converts or maps to customerRequest
                 // eli ban ka avelcnelu
                 customerRequests.add(CustomerRequest.getFromResponse(customerResponse));
-
+                return true;
             }
-            return b;
-        }
+
         return false;
     }
 
@@ -122,33 +126,38 @@ public class RequestController {
         double[] Ri = new double[PD.size()];
         double[] Pi = new double[PD.size()];
         double[] Wi = new double[PD.size()];
+        double[] Sigma = new double[PD.size()];
 
         for (int i = 0; i < PD.size(); ++i) {
             Pi[i] = PD.get(i)*((1 - LGD) + (1 - PD.get(i))) / (1 + Rf) *
                    Integer.parseInt(customerRequests.get(i).customerHistoryRequest().creditRequest().
-                            get(customerRequests.get(i).customerHistoryRequest().creditRequest().size()).loanAmount());
+                            get(customerRequests.get(i).customerHistoryRequest().creditRequest().size() - 1).loanAmount());
 
             Ri[i] = (Integer.parseInt(customerRequests.get(i).customerHistoryRequest().creditRequest().
-                    get(customerRequests.get(i).customerHistoryRequest().creditRequest().size()).loanAmount()) / Pi[i]) - 1;
+                    get(customerRequests.get(i).customerHistoryRequest().creditRequest().size() - 1).loanAmount()) / Pi[i]) - 1;
 
             Wi[i] = (double) Integer.parseInt(customerRequests.get(i).customerHistoryRequest().creditRequest().
-                    get(customerRequests.get(i).customerHistoryRequest().creditRequest().size()).loanAmount()) / capitalOfBank;
+                    get(customerRequests.get(i).customerHistoryRequest().creditRequest().size() - 1).loanAmount()) / capitalOfBank;
 
+            Sigma[i] = Math.pow(1 + Rf, 2) * (Math.pow(LGD + PD.get(i), 2) * (1 - PD.get(i)) + Math.pow(LGD *
+                    (PD.get(i) - 1), 2) * PD.get(i)) / Math.pow(1 - LGD * PD.get(i), 2);
+
+            customersFields.add(new CustomerWithMathModelFields(Sigma[i], Ri[i], Wi[i]));
         }
 
-        return null;
+        return customersFields;
     }
 
     private boolean postRejectedRequests(final CustomerRequest customerRequest) {
-
-        final String urlRejected = ""; // url of postMethod where is going to be passed CustomerRequest
+        final String urlRejected = "http://localhost:8080/Customer/saveCustomer"; // url of postMethod where is going to be passed CustomerRequest
         RestTemplate postRequest = new RestTemplate();
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<CustomerRequest> customerRequestHttpEntity = new HttpEntity<>(customerRequest, httpHeaders);
-        ResponseEntity<CustomerRequest> response = postRequest.exchange(urlRejected, HttpMethod.POST, customerRequestHttpEntity, CustomerRequest.class);
-        return response.getHeaders().isEmpty();
+        ResponseEntity<Boolean> response = postRequest.exchange(urlRejected, HttpMethod.POST, customerRequestHttpEntity, Boolean.class);
+        return Boolean.TRUE.equals(response.getBody());
 
     }
+
 
 }

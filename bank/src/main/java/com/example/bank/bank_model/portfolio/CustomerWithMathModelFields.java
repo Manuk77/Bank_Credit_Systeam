@@ -1,40 +1,40 @@
 package com.example.bank.bank_model.portfolio;
 
 public class CustomerWithMathModelFields {
-    private float sigma; // եկամտաբերության դիսպերսիա (եկամտաբերւթյան միջին քառակուսաին շեղում)
-    private int r; // եկամտաբերություն
-    private float w; // կշրաին գործակից
+    private double sigma; // եկամտաբերության դիսպերսիա (եկամտաբերւթյան միջին քառակուսային շեղում)
+    private double r; // եկամտաբերություն
+    private double w; // կշռային գործակից
 
     public CustomerWithMathModelFields() {
     }
 
-    public CustomerWithMathModelFields(final float sigma, final int r, final float w) {
+    public CustomerWithMathModelFields(final double sigma, final double r, final double w) {
         this.sigma = sigma;
         this.r = r;
         this.w = w;
     }
 
-    public float getSigma() {
+    public double getSigma() {
         return sigma;
     }
 
-    public void setSigma(final float sigma) {
+    public void setSigma(final double sigma) {
         this.sigma = sigma;
     }
 
-    public int getR() {
+    public double getR() {
         return r;
     }
 
-    public void setR(final int r) {
+    public void setR(final double r) {
         this.r = r;
     }
 
-    public float getW() {
+    public double getW() {
         return w;
     }
 
-    public void setW(final float w) {
+    public void setW(final double w) {
         this.w = w;
     }
 

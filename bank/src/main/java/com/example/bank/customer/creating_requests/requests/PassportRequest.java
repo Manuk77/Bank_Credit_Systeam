@@ -1,5 +1,6 @@
 package com.example.bank.customer.creating_requests.requests;
 
+import com.example.bank.customer.dto.PassportModel;
 import com.example.bank.customer.response.PassportResponse;
 import com.example.bank.validator.annotation.NotNullEmptyBlankString;
 import com.example.bank.validator.annotation.ValidPassportDates;
@@ -81,7 +82,8 @@ public record PassportRequest(
 ) {
 
         public static PassportRequest getFromResponse(final PassportResponse passportResponse) {
-                return new PassportRequest(passportResponse.firstName(),
+                return new PassportRequest(
+                        passportResponse.firstName(),
                         passportResponse.lastName(),
                         passportResponse.birthDate(),
                         passportResponse.gender(),
@@ -91,4 +93,30 @@ public record PassportRequest(
                         passportResponse.authority());
         }
 
+        public static PassportRequest getFromModel(final PassportModel passportModel) {
+                return new PassportRequest(
+                        passportModel.getFirstName(),
+                        passportModel.getLastName(),
+                        passportModel.getBirthDate().toString(),
+                        passportModel.getGender(),
+                        passportModel.getPassportNumber(),
+                        passportModel.getIssueDate().toString(),
+                        passportModel.getExpiryDate().toString(),
+                        passportModel.getAuthority()
+                );
+        }
+
+        @Override
+        public String toString() {
+                return "PassportRequest{" +
+                        "firstName='" + firstName + '\'' +
+                        ", lastName='" + lastName + '\'' +
+                        ", birthDate='" + birthDate + '\'' +
+                        ", gender='" + gender + '\'' +
+                        ", passportNumber='" + passportNumber + '\'' +
+                        ", issueDate='" + issueDate + '\'' +
+                        ", expiryDate='" + expiryDate + '\'' +
+                        ", authority='" + authority + '\'' +
+                        '}';
+        }
 }

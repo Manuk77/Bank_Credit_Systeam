@@ -1,34 +1,34 @@
 package com.example.bank.bank_model.risk_calculating;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class RiskCalculating {
-    private List<RankedModel> rankedModels;
+    private RankedModel rankedModel;
+    public List<Double> PD = new ArrayList<>(); // դեֆոլտի հավանականությունը
 
-    private List<Double> PD = new ArrayList<>(); // դեֆոլտի հավանականությունը
-
-    public RiskCalculating(final List<RankedModel> rankedModels) {
-        this.rankedModels = rankedModels;
+    public RiskCalculating(final RankedModel rankedModel) {
+        this.rankedModel = rankedModel;
     }
 
     public RiskCalculating() {
     }
 
-    public void setRankedModels(final List<RankedModel> rankedModels) {
-        this.rankedModels = rankedModels;
+    public void setRankedModels(final RankedModel rankedModel) {
+        this.rankedModel = rankedModel;
     }
 
-    public List<RankedModel> getRankedModels() {
-        return rankedModels;
+    public RankedModel getRankedModels() {
+        return rankedModel;
     }
 
-    public List<Boolean> allRiskCalculations() {
+    public Boolean allRiskCalculations() {
         return riskCounting();
     }
+
     public List<Double> getPD() {
         return PD;
     }
-
 
 
     /**
@@ -36,34 +36,27 @@ public class RiskCalculating {
      *
      * @return List
      */
-    private List<Boolean> riskCounting() {
-        final float betta0 = 0.039f;
-        final float betta1 = -0.16f;
-        final float betta2 = 0.0003f;
-        final float betta3 = 0.024f;
-        final float betta4 = 0.109f;
-        final float betta5 = 0.108f;
-        final float betta6 = 0.307f;
+    private Boolean riskCounting() {
+        final float betta0 = -0.04798f;
+        final float betta1 = -0.00553f;
+        final float betta2 = 0.096932f;
+        final float betta3 = 0.042873f;
+        final float betta4 = 0.151273f;
+        final float betta5 = -0.01447f;
+        final float betta6 = -0.00565f;
 
-        List<Double> y = new ArrayList<>();
+        List<Double> Y = new ArrayList<>();
+        double y;
 
-        for (final RankedModel rm : rankedModels) {
-            y.add((double) (betta0 + betta1 * rm.getX1() + betta2 * rm.getX2() + betta3 * rm.getX3() +
-                    betta4 * rm.getX4() + betta5 * rm.getX5() + betta6 * rm.getX6()));
-        }
+        y = (betta0 + betta1 * rankedModel.getX1() + betta2 * rankedModel.getX2() + betta3 * rankedModel.getX3() +
+                betta4 * rankedModel.getX4() + betta5 * rankedModel.getX5() + betta6 * rankedModel.getX6());
+        Y.add(y);
         return booleanListOfCustomers(y);
     }
 
-    /**
-     * @param listY is list of double y's
-     * @return list of booleans
-     */
-    private List<Boolean> booleanListOfCustomers(final List<Double> listY) {
-        List<Boolean> booleanY = new ArrayList<>();
-        for (final Double y : listY) {
-            booleanY.add(logisticModel(y));
-        }
-        return booleanY;
+
+    private Boolean booleanListOfCustomers(final Double y) {
+         return logisticModel(y);
     }
 
     /**
@@ -74,16 +67,15 @@ public class RiskCalculating {
      * DPt is probability of default set by the bank
      */
     private boolean logisticModel(final Double y) {
-        final double DPt = 0.824;
+        final double DPt = 0.6;
         double x = 1 - (1 / (1 + Math.pow(Math.E, y)));
         System.out.println("PDi = " + x);
-         if (x < DPt) {
-             PD.add(x);
-             return true;
-         }
-         return false;
+        if (x > DPt) {
+            PD.add(x);
+            return true;
+        }
+        return false;
     }
-
 
 
 }

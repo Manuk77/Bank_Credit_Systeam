@@ -10,13 +10,6 @@ public class ModelOfRanking {
     private Integer loanAmount;
     private Integer creditTime;
 
-    public ModelOfRanking(final Integer customerAge, final Integer customerIncome,
-                           final CreditHistoryType creditHistoryType) {
-
-        this.customerAge = customerAge;
-        this.customerIncome = customerIncome;
-        this.creditHistoryType = creditHistoryType;
-    }
 
     public ModelOfRanking(final Integer customerAge, final Integer customerIncome, final CreditType creditType,
                           final CreditHistoryType creditHistoryType, final Integer loanAmount, final Integer creditTime) {
@@ -134,7 +127,7 @@ public class ModelOfRanking {
     }
 
     private int rankingLoanAmount() {
-        if (loanAmount > 100_000 && loanAmount < 300_001)
+        if (loanAmount > 9999 && loanAmount < 300_001)
             return 1;
         if (loanAmount > 300_000 && loanAmount < 600_001)
             return 2;

@@ -67,6 +67,7 @@ public class CreditModel {
 
 
 
+
     public Banks getBankName() {
         return bankName;
     }

@@ -1,6 +1,7 @@
 package com.example.bank.bank_model.portfolio;
 
 import com.example.bank.customer.creating_requests.requests.CustomerRequest;
+import org.springframework.lang.NonNull;
 
 
 import java.util.*;
@@ -10,8 +11,8 @@ public class Portfolio {
     private List<CustomerRequest> customerRequests;
     private List<CustomerWithMathModelFields> customersMath;
 
-    private Map<Float, List<Integer>> mapL = new HashMap<>();
-    private List<Float> L = new ArrayList<>();
+    private final Map<Double, List<Integer>> mapL = new HashMap<>();
+    private final List<Double> L = new ArrayList<>();
     private List<Integer> acceptableLoan;
 
     public Portfolio() {
@@ -52,32 +53,30 @@ public class Portfolio {
     private void capacityConstraint(final List<Integer> listN) {
 
 
-        float sum = 0.0f;
-        long[] r = {0L};
-        customersMath.forEach(x -> r[0] += x.getR());
-        long R = (long) (r[0] * 1.1);
+        double sum = 0.0;
+        double sum1 = 0L;
+//        double r = 0.0;
+//        for (CustomerWithMathModelFields customerWithMathModelFields : customersMath) {
+//            r += customerWithMathModelFields.getR();
+//        }
+
+        double R = 0.07;
         for (int i = 0; i < customersMath.size(); ++i) {
             sum += customersMath.get(i).getW() * listN.get(i);
+            sum1 += (customersMath.get(i).getR() * listN.get(i) * customersMath.get(i).getW());
         }
-
-        if (sum <= 1) {
-            long sum1 = 0L;
+        if (sum <= 1 && sum1 >= R) {
+            double summ = 0.0;
             for (int i = 0; i < customersMath.size(); ++i) {
-                sum1 += (long) (customersMath.get(i).getR() * listN.get(i) * customersMath.get(i).getW());
-            }
-            if (sum1 >= R) {
-                float summ = 0.0f;
-                for (int i = 0; i < customersMath.size(); ++i) {
-                    summ += (float) (Math.pow(customersMath.get(i).getSigma(), 2) *
-                            Math.pow(listN.get(i), 2) *
-                            Math.pow(customersMath.get(i).getW(), 2));
+                summ +=  (Math.pow(customersMath.get(i).getSigma(), 2) *
+                        Math.pow(listN.get(i), 2) *
+                        Math.pow(customersMath.get(i).getW(), 2));
 
-                }
-                L.add(summ);
-                mapL.put(summ, listN);
             }
+            L.add(summ);
+            mapL.put(summ, listN);
+
         }
-
 
 
     }
@@ -87,11 +86,14 @@ public class Portfolio {
      *
      * @return acceptable customerRequest loans list
      */
-    private List<CustomerRequest> optimalLoans() {
+    private @NonNull List<CustomerRequest> optimalLoans() {
         List<CustomerRequest> optimalLoans = new ArrayList<>();
+        acceptableLoan = allPossibleOptions();
+        System.out.println("boolean list size" + acceptableLoan.size());
         for (int i = 0; i < acceptableLoan.size(); ++i) {
             if (acceptableLoan.get(i) == 1)
                 optimalLoans.add(customerRequests.get(i));
+
         }
         return optimalLoans;
     }
@@ -111,14 +113,14 @@ public class Portfolio {
      *      .  .  .  .  ...  .
      *     [1, 1, 1, 1, ..., 1]
      */
-    private void allPossibleOptions() {
+    private List<Integer> allPossibleOptions() {
         int k = customersMath.size(); // Length of the list
         int totalOptions = (int) Math.pow(2, k) - 1;
+        List<Integer> option = new ArrayList<>();
 
         // Create a two-dimensional list to store the options
-        List<List<Integer>> optionsList = new ArrayList<>();
         for (int i = 1; i <= totalOptions; i++) {
-            List<Integer> option = new ArrayList<>();
+
 
             for (int j = 0; j < k; j++) {
                 int bit = (i >> j) & 1;
@@ -126,11 +128,23 @@ public class Portfolio {
             }
 
             capacityConstraint(option);
+            if (i == 1023)
+                break;
+            option.clear();
         }
 
-        acceptableLoan = mapL.get(Collections.min(L));
+        return mapL.get(Collections.min(L));
+       // System.out.println(acceptableLoan);
+
     }
 
+   private void printOptimalLoans() {
+        for (CustomerRequest customerRequest: optimalLoans()) {
+            System.out.println(customerRequest);
+        }
+   }
 
-
+    public List<CustomerRequest> getOptimalCustomersList() {
+        return optimalLoans();
+    }
 }

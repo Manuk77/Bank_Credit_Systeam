@@ -1,5 +1,6 @@
 package com.example.bank.customer.creating_requests.requests;
 
+import com.example.bank.customer.dto.CreditModel;
 import com.example.bank.customer.response.CreditResponse;
 import com.example.bank.validator.annotation.NotNullEmptyBlankString;
 import com.example.bank.validator.annotation.ValidCreditDates;
@@ -53,7 +54,8 @@ public record CreditRequest(
 ) {
 
     public static CreditRequest getFromResponse(final CreditResponse creditResponse) {
-        return new CreditRequest(creditResponse.bankName(),
+        return new CreditRequest(
+                creditResponse.bankName(),
                 creditResponse.loanAmount(),
                 creditResponse.creditType(),
                 creditResponse.paymentPerMonth(),
@@ -62,6 +64,21 @@ public record CreditRequest(
                 creditResponse.creditState(),
                 creditResponse.isAccepted(),
                 creditResponse.percent());
+    }
+
+    public static CreditRequest getFromModel(final CreditModel creditModel) {
+        return new CreditRequest(
+                creditModel.getBankName().toString(),
+                creditModel.getLoanAmount(),
+                creditModel.getCreditType().toString(),
+                creditModel.getPaymentPerMonth(),
+                creditModel.getCreditState().toString(),
+                creditModel.getEndCreditDate().toString(),
+                creditModel.getCreditState().toString(),
+                creditModel.getAccepted().toString(),
+                creditModel.getPercent().toString()
+
+        );
     }
 
     public static List<CreditResponse> getListFromRequest(final List<CreditRequest> creditRequests) {
@@ -78,4 +95,6 @@ public record CreditRequest(
                         creditRequest.percent()
                 )).toList();
     }
+
+
 }

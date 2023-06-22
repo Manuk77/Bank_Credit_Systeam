@@ -1,5 +1,6 @@
 package com.example.bank.customer.creating_requests.requests;
 
+import com.example.bank.customer.dto.CustomerInfoModel;
 import com.example.bank.customer.response.CustomerInfoResponse;
 import com.example.bank.validator.annotation.NotNullEmptyBlankString;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -67,11 +68,35 @@ public record CustomerInfoRequest(
 ) {
 
         public static CustomerInfoRequest getFromResponse(final CustomerInfoResponse customerInfoResponse) {
-                return new CustomerInfoRequest(customerInfoResponse.firstName(),
+                return new CustomerInfoRequest(
+                        customerInfoResponse.firstName(),
                         customerInfoResponse.lastName(),
                         customerInfoResponse.birthDate(),
                         customerInfoResponse.age(),
                         customerInfoResponse.phone(),
                         customerInfoResponse.email());
+        }
+
+        public static CustomerInfoRequest getFromModel(final CustomerInfoModel customerInfoModel) {
+                return new CustomerInfoRequest(
+                        customerInfoModel.getFirstName(),
+                        customerInfoModel.getLastName(),
+                        customerInfoModel.getBirthDate(),
+                        customerInfoModel.getAge().toString(),
+                        customerInfoModel.getPhone(),
+                        customerInfoModel.getEmail()
+                );
+        }
+
+        @Override
+        public String toString() {
+                return "CustomerInfoRequest{" +
+                        "firstName='" + firstName + '\'' +
+                        ", lastName='" + lastName + '\'' +
+                        ", birthDate='" + birthDate + '\'' +
+                        ", age='" + age + '\'' +
+                        ", phone='" + phone + '\'' +
+                        ", email='" + email + '\'' +
+                        '}';
         }
 }

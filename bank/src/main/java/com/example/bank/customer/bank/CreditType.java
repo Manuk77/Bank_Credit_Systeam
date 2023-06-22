@@ -6,6 +6,6 @@ public enum CreditType {
     GOLD_PAWN_LOAN, // ոսկու գրավով
     CREDIT, // ապառիկ
     HOME_IMPROVEMENT_LOAN, // տան վերանորոգման վարկ
-    CAR_PURCHASE_LOAN
+    CAR_PURCHASE_LOAN   //
 
 }

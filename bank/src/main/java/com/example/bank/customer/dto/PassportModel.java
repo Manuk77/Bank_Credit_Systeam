@@ -34,7 +34,7 @@ public class PassportModel {
         this.gender = passportRequest.gender();
         this.issueDate = Date.valueOf(passportRequest.issueDate());
         this.expiryDate = Date.valueOf(passportRequest.expiryDate());
-        this.passport_number = passportRequest.passport_number();
+        this.passport_number = passportRequest.passportNumber();
         this.firstName = passportRequest.firstName();
         this.lastName = passportRequest.lastName();
         this.birthDate = Date.valueOf(passportRequest.birthDate());

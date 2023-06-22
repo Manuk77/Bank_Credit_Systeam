@@ -13,7 +13,7 @@ import java.util.List;
 public class FilterCustomerInfo {
 
     private static CustomerRequestFiltered customerRequestFiltered;
-    private static   CustomerResponse customerResponse;
+    private static CustomerResponse customerResponse;
 
 
     public FilterCustomerInfo(final CustomerRequestFiltered customerRequestFiltered) {
@@ -33,16 +33,13 @@ public class FilterCustomerInfo {
             creditModels.add(new CreditModel(cr));
         }
 
-
-
-        ModelOfRanking modelOfRanking = new ModelOfRanking(
+        return new ModelOfRanking(
                 Integer.valueOf(customerResponse.customerInfoResponse().age()),
                 customerIncome(creditModels, customerRequestFiltered.workingPlaceRequest().salary()),
-                getCreditHistoryType(customerResponse.customerHistoryResponse().creditScore()));
-        modelOfRanking.setCreditType(CreditType.valueOf(customerRequestFiltered.creditRequest().creditType()));
-        modelOfRanking.setCreditTime(Integer.valueOf(customerRequestFiltered.creditRequest().creditTime()));
-        modelOfRanking.setLoanAmount(Integer.valueOf(customerRequestFiltered.creditRequest().loanAmount()));
-        return modelOfRanking;
+                CreditType.valueOf(customerRequestFiltered.creditRequest().creditType()),
+                getCreditHistoryType(customerResponse.customerHistoryResponse().creditScore()),
+                Integer.valueOf(customerRequestFiltered.creditRequest().loanAmount()),
+                Integer.valueOf(customerRequestFiltered.creditRequest().creditTime()));
 
     }
 
@@ -53,8 +50,8 @@ public class FilterCustomerInfo {
                 Integer.valueOf(customerRequestFiltered.workingPlaceRequest().salary()),
                 CreditType.valueOf(customerRequestFiltered.creditRequest().creditType()),
                 getCreditHistoryType("600"),
-                Integer.valueOf(customerRequestFiltered.creditRequest().creditTime()),
-                Integer.valueOf(customerRequestFiltered.creditRequest().loanAmount()));
+                Integer.valueOf(customerRequestFiltered.creditRequest().loanAmount()),
+                Integer.valueOf(customerRequestFiltered.creditRequest().creditTime()));
     }
 
     /**
@@ -72,7 +69,9 @@ public class FilterCustomerInfo {
             return CreditHistoryType.GOOD;
         if (score > 739 && score < 800)
             return CreditHistoryType.VERY_GOOD;
-        return CreditHistoryType.EXCEPTIONAL;
+        if (score > 799 && score < 851)
+            return CreditHistoryType.EXCEPTIONAL;
+        return CreditHistoryType.POOR;
     }
 
     /**
