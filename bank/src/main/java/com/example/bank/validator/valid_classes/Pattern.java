@@ -1,4 +1,4 @@
-package com.example.bank.validator.annotation;
+package com.example.bank.validator.valid_classes;
 
 public class Pattern {
 

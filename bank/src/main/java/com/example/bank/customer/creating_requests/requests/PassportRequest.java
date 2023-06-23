@@ -57,7 +57,7 @@ public record PassportRequest(
 
         @NotNullEmptyBlankString
         @Pattern(
-                regexp = com.example.bank.validator.annotation.Pattern.DATE_PATTERN,
+                regexp = com.example.bank.validator.valid_classes.Pattern.DATE_PATTERN,
                 message = "Regex for 'issueDate': yyyy-mm-dd"
         )
         @JsonProperty("issue_date")
@@ -65,7 +65,7 @@ public record PassportRequest(
 
         @NotNullEmptyBlankString
         @Pattern(
-                regexp = com.example.bank.validator.annotation.Pattern.DATE_PATTERN,
+                regexp = com.example.bank.validator.valid_classes.Pattern.DATE_PATTERN,
                 message = "Regex for 'expiryDate': yyyy-mm-dd"
         )
         @JsonProperty("expiry_date")

@@ -1,12 +1,13 @@
-package com.example.bank.validator.annotation;
+package com.example.bank.validator.valid_classes;
 import com.example.bank.customer.creating_requests.requests.PassportRequest;
+import com.example.bank.validator.annotation.ValidPassportDates;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 
 import java.time.LocalDate;
 
-public class ValidPassportDatesValidator implements ConstraintValidator< ValidPassportDates, Object> {
+public class ValidPassportDatesValidator implements ConstraintValidator<ValidPassportDates, Object> {
 
     @Override
     public void initialize(ValidPassportDates constraintAnnotation) {

@@ -10,9 +10,10 @@ import com.example.bank.customer.creating_requests.requests.CustomerHistoryReque
 import com.example.bank.customer.creating_requests.requests.CustomerRequest;
 import com.example.bank.customer.creating_requests.requests.CustomerRequestFiltered;
 import com.example.bank.customer.response.CustomerResponse;
-import com.example.bank.validator.annotation.NotNullEmptyBlankString;
+
+import jakarta.validation.Valid;
 import org.springframework.http.*;
-import org.springframework.lang.NonNull;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,7 +34,7 @@ public class RequestController {
     private final List<FilterCustomerInfo> filterCustomerInfos = new ArrayList<>();
 
     @PostMapping("/risk")
-    public @ResponseBody Boolean getInfo(@RequestBody @NonNull final CustomerRequestFiltered customerRequestFiltered) {
+    public @ResponseBody Boolean getInfo(@Valid @RequestBody  final CustomerRequestFiltered customerRequestFiltered) {
         final String path = "http://localhost:8080/Customer/getInfo/" + customerRequestFiltered.passportRequest().passportNumber();
 
         RestTemplate rt = new RestTemplate();

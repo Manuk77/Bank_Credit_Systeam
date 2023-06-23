@@ -1,7 +1,8 @@
-package com.example.bank.validator.annotation;
+package com.example.bank.validator.valid_classes;
 
 
 import com.example.bank.customer.creating_requests.requests.CreditRequest;
+import com.example.bank.validator.annotation.ValidCreditDates;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

@@ -3,8 +3,8 @@ package com.example.acra.customer.requests.creating_requests;
 
 import com.example.acra.annotation.NotNullEmptyBlankString;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
-
 
 
 import java.util.List;
@@ -34,8 +34,8 @@ public record CustomerHistoryRequest(
         @JsonProperty("credit_score")
         String creditScore,
 
-        
 
+        @Valid
         @JsonProperty("credits")
         List<CreditRequest> creditRequest
 ) {

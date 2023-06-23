@@ -2,24 +2,25 @@ package com.example.acra.customer.requests.creating_requests;
 
 import com.example.acra.annotation.NotNullEmptyBlankString;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
 
 public record CustomerRequest(
-        @NotNullEmptyBlankString
+        @Valid
         @JsonProperty("address_info")
         AddressRequest addressRequest,
 
-        @NotNullEmptyBlankString
+        @Valid
         @JsonProperty("passport_info")
         PassportRequest passportRequest,
 
-        @NotNullEmptyBlankString
+        @Valid
         @JsonProperty("customer_info")
         CustomerInfoRequest customerInfoRequest,
 
-        @NotNullEmptyBlankString
+        @Valid
         @JsonProperty("credit_history")
         CustomerHistoryRequest customerHistoryRequest,
-        @NotNullEmptyBlankString
+        @Valid
         @JsonProperty("working_place")
         WorkingPlaceRequest workingPlaceRequest) {
 }
