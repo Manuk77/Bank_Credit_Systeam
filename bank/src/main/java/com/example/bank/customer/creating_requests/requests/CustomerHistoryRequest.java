@@ -6,8 +6,8 @@ import com.example.bank.customer.response.CreditResponse;
 import com.example.bank.customer.response.CustomerHistoryResponse;
 import com.example.bank.validator.annotation.NotNullEmptyBlankString;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
-
 
 
 import java.util.List;
@@ -37,45 +37,45 @@ public record CustomerHistoryRequest(
         @JsonProperty("credit_score")
         String creditScore,
 
-
+        @Valid
         @JsonProperty("credits")
         List<CreditRequest> creditRequest
 ) {
 
-        public static CustomerHistoryRequest getFromResponse(final CustomerHistoryResponse customerHistoryResponse) {
-                return new CustomerHistoryRequest(
-                        customerHistoryResponse.salary(),
-                        customerHistoryResponse.hasActiveCredit(),
-                        customerHistoryResponse.creditScore(),
-                        convFromResponse(customerHistoryResponse.creditResponse()));
-        }
+    public static CustomerHistoryRequest getFromResponse(final CustomerHistoryResponse customerHistoryResponse) {
+        return new CustomerHistoryRequest(
+                customerHistoryResponse.salary(),
+                customerHistoryResponse.hasActiveCredit(),
+                customerHistoryResponse.creditScore(),
+                convFromResponse(customerHistoryResponse.creditResponse()));
+    }
 
-        public static CustomerHistoryRequest getFromModel(final CustomerHistoryModel customerHistoryModel) {
-                return new CustomerHistoryRequest(
-                        customerHistoryModel.getSalary(),
-                        customerHistoryModel.getHasActiveCredit().toString(),
-                        customerHistoryModel.getCreditScore().toString(),
-                        convFromModel(customerHistoryModel.getCreditModels())
+    public static CustomerHistoryRequest getFromModel(final CustomerHistoryModel customerHistoryModel) {
+        return new CustomerHistoryRequest(
+                customerHistoryModel.getSalary(),
+                customerHistoryModel.getHasActiveCredit().toString(),
+                customerHistoryModel.getCreditScore().toString(),
+                convFromModel(customerHistoryModel.getCreditModels())
 
-                );
-        }
+        );
+    }
 
 
-        private static List<CreditRequest> convFromResponse(final List<CreditResponse> creditResponses) {
-               return creditResponses.stream().map(CreditRequest::getFromResponse).toList();
-        }
+    private static List<CreditRequest> convFromResponse(final List<CreditResponse> creditResponses) {
+        return creditResponses.stream().map(CreditRequest::getFromResponse).toList();
+    }
 
-        private static List<CreditRequest> convFromModel(final List<CreditModel> creditModels) {
-                return creditModels.stream().map(CreditRequest::getFromModel).toList();
-        }
+    private static List<CreditRequest> convFromModel(final List<CreditModel> creditModels) {
+        return creditModels.stream().map(CreditRequest::getFromModel).toList();
+    }
 
-        @Override
-        public String toString() {
-                return "CustomerHistoryRequest{" +
-                        "salary='" + salary + '\'' +
-                        ", hasActiveCredit='" + hasActiveCredit + '\'' +
-                        ", creditScore='" + creditScore + '\'' +
-                        ", creditRequest=" + creditRequest +
-                        '}';
-        }
+    @Override
+    public String toString() {
+        return "CustomerHistoryRequest{" +
+                "salary='" + salary + '\'' +
+                ", hasActiveCredit='" + hasActiveCredit + '\'' +
+                ", creditScore='" + creditScore + '\'' +
+                ", creditRequest=" + creditRequest +
+                '}';
+    }
 }

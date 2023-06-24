@@ -24,7 +24,7 @@ public class CustomerController {
 
 
     @PostMapping(value = "/saveCustomer")
-    public Boolean saveInfo(@RequestBody final CustomerRequest customerRequest) {
+    public Boolean saveInfo(@Valid @RequestBody final CustomerRequest customerRequest) {
         return customerService.saveCustomer(
                 new AddressModel(customerRequest.addressRequest()),
                 new PassportModel(customerRequest.passportRequest()),
@@ -37,12 +37,13 @@ public class CustomerController {
     @PatchMapping(value = "/updateCredit/{passportNumber}")
     public Boolean updateCredit(@RequestBody  final CreditRequest creditRequest,
                                 @PathVariable @NonNull final  String passportNumber) {
+
         return customerService.updateCredit(new CreditModel(creditRequest), passportNumber);
     }
 
     @GetMapping(value = "/getInfo/{passportNumber}")
     public @ResponseBody CustomerResponse getInfo(@PathVariable @NonNull final String passportNumber) {
-        return  CustomerResponse.getFromModel(customerService.getInfo(passportNumber));
+        return CustomerResponse.getFromModel(customerService.getInfo(passportNumber));
     }
 
     @GetMapping(value = "/getInfo/{firstName}/{lastName}")

@@ -6,12 +6,16 @@ import com.example.bank.customer.creating_requests.requests.CustomerRequestFilte
 import com.example.bank.customer.dto.CreditModel;
 import com.example.bank.customer.dto.CustomerModel;
 import com.example.bank.customer.response.CustomerResponse;
-import com.example.bank.service.RequestService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.bank.mailmessage.EmailService;
+import com.itextpdf.text.DocumentException;
+import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import org.springframework.http.*;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import java.sql.Date;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,12 @@ public class RequestController {
         this.requestService = requestService;
     }
 
+    private final EmailService emailService;
+
+    public RequestController(EmailService emailService) {
+        this.emailService = emailService;
+    }
+
     @PostMapping("/risk")
     public @ResponseBody Boolean getInfo(@RequestBody final CustomerRequestFiltered customerRequestFiltered) {
         final String creditTime = customerRequestFiltered.creditRequest().creditTime();
@@ -39,6 +49,28 @@ public class RequestController {
         if (customerModels == null)
             return true;
         return postAcceptedRequests(customerModels);
+    }
+
+    /**
+     * test
+     * @param customerRequestFiltered
+     * @return
+     */
+    @PostMapping("/get")
+    public @ResponseBody Boolean getInfo1(@Valid @RequestBody  final CustomerRequestFiltered customerRequestFiltered) {
+        final String path = "http://localhost:8080/Customer/getInfo/" + customerRequestFiltered.passportRequest().passportNumber();
+
+        RestTemplate rt = new RestTemplate();
+        Optional<CustomerResponse> customerOp = Optional.ofNullable(rt.getForObject(path, CustomerResponse.class));
+        if(customerOp.isPresent()){
+            try {
+                emailService.sendEmailWithAttachment(customerOp.get().customerInfoResponse().email());
+            } catch (MessagingException | DocumentException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return true;
+        }
+        return false;
     }
 
 
