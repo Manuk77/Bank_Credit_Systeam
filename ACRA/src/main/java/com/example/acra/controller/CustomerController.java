@@ -6,6 +6,7 @@ import com.example.acra.customer.requests.creating_requests.CreditRequest;
 import com.example.acra.customer.requests.creating_requests.CustomerRequest;
 import com.example.acra.customer.response.CustomerResponse;
 import com.example.acra.service.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class CustomerController {
 
 
     @PostMapping(value = "/saveCustomer")
-    public Boolean saveInfo(@RequestBody @NonNull final CustomerRequest customerRequest) {
+    public Boolean saveInfo(@RequestBody final CustomerRequest customerRequest) {
         return customerService.saveCustomer(
                 new AddressModel(customerRequest.addressRequest()),
                 new PassportModel(customerRequest.passportRequest()),
@@ -34,7 +35,7 @@ public class CustomerController {
 
 
     @PatchMapping(value = "/updateCredit/{passportNumber}")
-    public Boolean updateCredit(@RequestBody @NonNull final CreditRequest creditRequest,
+    public Boolean updateCredit(@RequestBody  final CreditRequest creditRequest,
                                 @PathVariable @NonNull final  String passportNumber) {
         return customerService.updateCredit(new CreditModel(creditRequest), passportNumber);
     }
