@@ -1,4 +1,5 @@
 package com.example.bank.controller;
+
 import com.example.bank.customer.bank.Banks;
 import com.example.bank.customer.bank.CreditType;
 import com.example.bank.customer.creating_requests.requests.CustomerRequest;
@@ -7,15 +8,17 @@ import com.example.bank.customer.dto.CreditModel;
 import com.example.bank.customer.dto.CustomerModel;
 import com.example.bank.customer.response.CustomerResponse;
 import com.example.bank.mailmessage.EmailService;
+import com.example.bank.service.RequestService;
 import com.itextpdf.text.DocumentException;
 import jakarta.mail.MessagingException;
-import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,17 +29,22 @@ import java.util.Optional;
 public class RequestController {
 
     private final RequestService requestService;
-
-    @Autowired
-    public RequestController(final RequestService requestService) {
-        this.requestService = requestService;
-    }
+    private final BankController bankController;
 
     private final EmailService emailService;
 
-    public RequestController(EmailService emailService) {
+    @Autowired
+    public RequestController(RequestService requestService, BankController bankController, EmailService emailService) {
+        this.requestService = requestService;
+        this.bankController = bankController;
         this.emailService = emailService;
     }
+
+    /**
+     *
+     * @param customerRequestFiltered
+     * @return
+     */
 
     @PostMapping("/risk")
     public @ResponseBody Boolean getInfo(@RequestBody final CustomerRequestFiltered customerRequestFiltered) {
@@ -46,51 +54,44 @@ public class RequestController {
         RestTemplate rt = new RestTemplate();
         Optional<CustomerResponse> customerOp = Optional.ofNullable(rt.getForObject(path, CustomerResponse.class));
         List<CustomerModel> customerModels = requestService.calculateRisks(customerModel, customerOp, creditTime);
-        if (customerModels == null)
-            return true;
-        return postAcceptedRequests(customerModels);
-    }
-
-    /**
-     * test
-     * @param customerRequestFiltered
-     * @return
-     */
-    @PostMapping("/get")
-    public @ResponseBody Boolean getInfo1(@Valid @RequestBody  final CustomerRequestFiltered customerRequestFiltered) {
-        final String path = "http://localhost:8080/Customer/getInfo/" + customerRequestFiltered.passportRequest().passportNumber();
-
-        RestTemplate rt = new RestTemplate();
-        Optional<CustomerResponse> customerOp = Optional.ofNullable(rt.getForObject(path, CustomerResponse.class));
-        if(customerOp.isPresent()){
-            try {
-                emailService.sendEmailWithAttachment(customerOp.get().customerInfoResponse().email());
-            } catch (MessagingException | DocumentException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            return true;
+        if (customerModels == null) {
+            return false;
         }
-        return false;
-    }
-
-
-
-    private boolean postAcceptedRequests(final List<CustomerModel> customerModels) {
-
-        for (final CustomerModel customerModel: customerModels) {
-            CustomerRequest customerRequest = CustomerRequest.getFromModel(customerModel);
-            final String urlRejected = "http://localhost:8080/Customer/saveCustomer"; // url of postMethod where is going to be passed CustomerRequest
-            RestTemplate postRequest = new RestTemplate();
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<CustomerRequest> customerRequestHttpEntity = new HttpEntity<>(customerRequest, httpHeaders);
-            ResponseEntity<Boolean> response = postRequest.exchange(urlRejected, HttpMethod.POST, customerRequestHttpEntity, Boolean.class);
-            if (!Boolean.TRUE.equals(response.getBody()))
-                return false;
+        for (CustomerModel cm : customerModels) {
+            if (postAcceptedRequests(cm)) {
+                try {
+                    emailService.sendEmailWithAttachment(cm);
+                } catch (MessagingException | DocumentException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return true;
     }
 
+    /**
+     *
+     * @param customerModel
+     * @return
+     */
+
+    private boolean postAcceptedRequests(final CustomerModel customerModel) {
+        CustomerRequest customerRequest = CustomerRequest.getFromModel(customerModel);
+        bankController.saveInfoAcceptedCustomers(customerRequest);
+        final String urlRejected = "http://localhost:8080/Customer/saveCustomer"; // url of postMethod where is going to be passed CustomerRequest
+        RestTemplate postRequest = new RestTemplate();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<CustomerRequest> customerRequestHttpEntity = new HttpEntity<>(customerRequest, httpHeaders);
+        ResponseEntity<Boolean> response = postRequest.exchange(urlRejected, HttpMethod.POST, customerRequestHttpEntity, Boolean.class);
+        return Boolean.TRUE.equals(response.getBody());
+    }
+
+    /**
+     *
+     * @param customerRequestFiltered
+     * @return
+     */
     private CustomerModel getFromCustomerRequestFiltered(final CustomerRequestFiltered customerRequestFiltered) {
         List<CreditModel> creditModels = new ArrayList<>();
         creditModels.add(new CreditModel(
@@ -109,8 +110,6 @@ public class RequestController {
                 false,
                 false
         ));
-        return new CustomerModel(customerRequestFiltered,creditModels);
+        return new CustomerModel(customerRequestFiltered, creditModels);
     }
-
-
 }
