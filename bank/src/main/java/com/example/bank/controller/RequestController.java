@@ -11,12 +11,16 @@ import com.example.bank.customer.creating_requests.requests.CustomerRequest;
 import com.example.bank.customer.creating_requests.requests.CustomerRequestFiltered;
 import com.example.bank.customer.response.CustomerResponse;
 
+import com.example.bank.mailmessage.EmailService;
+import com.itextpdf.text.DocumentException;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.http.*;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +36,12 @@ public class RequestController {
     private final Long capitalOfBank = 40_000_000L;
     private final List<RankedModel> rankedModels = new ArrayList<>();
     private final List<FilterCustomerInfo> filterCustomerInfos = new ArrayList<>();
+
+    private final EmailService emailService;
+
+    public RequestController(EmailService emailService) {
+        this.emailService = emailService;
+    }
 
     @PostMapping("/risk")
     public @ResponseBody Boolean getInfo(@Valid @RequestBody  final CustomerRequestFiltered customerRequestFiltered) {
@@ -55,6 +65,28 @@ public class RequestController {
             return true;
         }
 
+        return false;
+    }
+
+    /**
+     * test
+     * @param customerRequestFiltered
+     * @return
+     */
+    @PostMapping("/get")
+    public @ResponseBody Boolean getInfo1(@Valid @RequestBody  final CustomerRequestFiltered customerRequestFiltered) {
+        final String path = "http://localhost:8080/Customer/getInfo/" + customerRequestFiltered.passportRequest().passportNumber();
+
+        RestTemplate rt = new RestTemplate();
+        Optional<CustomerResponse> customerOp = Optional.ofNullable(rt.getForObject(path, CustomerResponse.class));
+        if(customerOp.isPresent()){
+            try {
+                emailService.sendEmailWithAttachment(customerOp.get().customerInfoResponse().email());
+            } catch (MessagingException | DocumentException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return true;
+        }
         return false;
     }
 
