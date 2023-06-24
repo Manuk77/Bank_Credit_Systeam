@@ -23,7 +23,19 @@ public class CreditModel {
     private Boolean isAccepted;
 
 
-    public CreditModel() {
+    public CreditModel(final CreditType creditType, final Banks bankName, final String loanAmount,
+                       final Date startCreditDate, final Date endCreditDate, final String paymentPerMonth,
+                       final Byte percent, final Boolean creditState, final Boolean isAccepted) {
+
+        this.bankName = bankName;
+        this.creditType = creditType;
+        this.startCreditDate = startCreditDate;
+        this.endCreditDate = endCreditDate;
+        this.percent = percent;
+        this.paymentPerMonth = paymentPerMonth;
+        this.loanAmount = loanAmount;
+        this.creditState = creditState;
+        this.isAccepted = isAccepted;
     }
 
     public CreditModel(final CreditEntity creditEntity) {

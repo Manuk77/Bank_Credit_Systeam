@@ -6,6 +6,7 @@ import com.example.bank.customer.creating_requests.requests.CustomerRequest;
 import com.example.bank.customer.dto.*;
 import com.example.bank.customer.response.*;
 import com.example.bank.service.BankService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,6 @@ import java.util.Optional;
 @RequestMapping(value = "/bank")
 public class BankController {
     private final BankService bankService;
-
     @Autowired
     public BankController(final BankService bankService) {
         this.bankService = bankService;
@@ -42,7 +42,7 @@ public class BankController {
     }
 
     @PostMapping(value = "save/rejected/customers")
-    public @ResponseBody CustomerResponse saveInfoRejectedCustomers(@RequestBody @NonNull final CustomerRequest customerRequest){
+    public @ResponseBody CustomerResponse saveInfoRejectedCustomers(@RequestBody @Valid final CustomerRequest customerRequest){
         // RestTemplate if it rejected
        if (bankService.saveCustomer(new AddressModel(customerRequest.addressRequest()),
                 new PassportModel(customerRequest.passportRequest()),
@@ -58,11 +58,10 @@ public class BankController {
     }
 
     @PostMapping(value = "save/accepted/customers")
-    public @ResponseBody CustomerResponse saveInfoAcceptedCustomers(@RequestBody @NonNull final CustomerRequest customerRequest) {
+    public @ResponseBody CustomerResponse saveInfoAcceptedCustomers(@RequestBody @Valid final CustomerRequest customerRequest) {
         // RestTemplate getFrom ACRA
 
-        if (bankService.saveCustomer(
-                new AddressModel(customerRequest.addressRequest()),
+        if (bankService.saveCustomer(new AddressModel(customerRequest.addressRequest()),
                 new PassportModel(customerRequest.passportRequest()),
                 new CustomerInfoModel(customerRequest.customerInfoRequest()),
                 new CustomerHistoryModel(customerRequest.customerHistoryRequest()),

@@ -5,6 +5,8 @@ import com.example.bank.bank_model.risk_calculating.ModelOfRanking;
 import com.example.bank.customer.bank.CreditType;
 import com.example.bank.customer.creating_requests.requests.CustomerRequestFiltered;
 import com.example.bank.customer.dto.CreditModel;
+import com.example.bank.customer.dto.CustomerModel;
+import com.example.bank.customer.dto.CustomerModelFiltered;
 import com.example.bank.customer.response.CreditResponse;
 import com.example.bank.customer.response.CustomerResponse;
 import java.util.ArrayList;
@@ -12,19 +14,14 @@ import java.util.List;
 
 public class FilterCustomerInfo {
 
-    private static CustomerRequestFiltered customerRequestFiltered;
+    private static CustomerModelFiltered customerModelFiltered;
     private static CustomerResponse customerResponse;
 
 
-    public FilterCustomerInfo(final CustomerRequestFiltered customerRequestFiltered) {
-        FilterCustomerInfo.customerRequestFiltered = customerRequestFiltered;
+    public FilterCustomerInfo(final CustomerModelFiltered customerModelFiltered) {
+        FilterCustomerInfo.customerModelFiltered = customerModelFiltered;
     }
 
-    public FilterCustomerInfo(final CustomerRequestFiltered customerRequestFiltered,
-                              final CustomerResponse customerResponse) {
-        FilterCustomerInfo.customerRequestFiltered = customerRequestFiltered;
-        FilterCustomerInfo.customerResponse = customerResponse;
-    }
 
     public static ModelOfRanking filterCustomerResponse() {
 
@@ -32,26 +29,14 @@ public class FilterCustomerInfo {
         for (final CreditResponse cr : customerResponse.customerHistoryResponse().creditResponse()) {
             creditModels.add(new CreditModel(cr));
         }
-
-        return new ModelOfRanking(
-                Integer.valueOf(customerResponse.customerInfoResponse().age()),
-                customerIncome(creditModels, customerRequestFiltered.workingPlaceRequest().salary()),
-                CreditType.valueOf(customerRequestFiltered.creditRequest().creditType()),
-                getCreditHistoryType(customerResponse.customerHistoryResponse().creditScore()),
-                Integer.valueOf(customerRequestFiltered.creditRequest().loanAmount()),
-                Integer.valueOf(customerRequestFiltered.creditRequest().creditTime()));
+        customerModelFiltered.setCustomerIncome(customerIncome(creditModels, customerModelFiltered.getCustomerIncome()));
+        return new ModelOfRanking(customerModelFiltered);
 
     }
 
     public static  ModelOfRanking filterCustomerRequest() {
 
-        return new ModelOfRanking(
-                Integer.valueOf(customerRequestFiltered.customerInfoRequest().age()),
-                Integer.valueOf(customerRequestFiltered.workingPlaceRequest().salary()),
-                CreditType.valueOf(customerRequestFiltered.creditRequest().creditType()),
-                getCreditHistoryType("600"),
-                Integer.valueOf(customerRequestFiltered.creditRequest().loanAmount()),
-                Integer.valueOf(customerRequestFiltered.creditRequest().creditTime()));
+        return new ModelOfRanking(customerModelFiltered);
     }
 
     /**
@@ -80,9 +65,9 @@ public class FilterCustomerInfo {
      * @param salary of the customer
      * @return different of the (salary -= all credits paymentPerMonth)
      */
-    private static Integer customerIncome(final List<CreditModel> creditModels, final String salary) {
+    private static Integer customerIncome(final List<CreditModel> creditModels, final Integer salary) {
 
-        int salary1 = Integer.parseInt(salary);
+        int salary1 = salary;
         for (final CreditModel cm: creditModels) {
             if (cm.getCreditState()) {
                 salary1 -= Integer.parseInt(cm.getPaymentPerMonth());
@@ -94,8 +79,8 @@ public class FilterCustomerInfo {
 
 
 
-    public void setCustomerRequest(CustomerRequestFiltered customerRequestFiltered) {
-        FilterCustomerInfo.customerRequestFiltered = customerRequestFiltered;
+    public void setCustomerRequest(CustomerModelFiltered customerModelFiltered) {
+        FilterCustomerInfo.customerModelFiltered = customerModelFiltered;
     }
 
 

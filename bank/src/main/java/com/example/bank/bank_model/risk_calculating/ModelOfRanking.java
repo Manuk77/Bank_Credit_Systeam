@@ -1,6 +1,7 @@
 package com.example.bank.bank_model.risk_calculating;
 
 import com.example.bank.customer.bank.CreditType;
+import com.example.bank.customer.dto.CustomerModelFiltered;
 
 public class ModelOfRanking {
     private final  Integer customerAge;
@@ -21,6 +22,15 @@ public class ModelOfRanking {
         this.loanAmount = loanAmount;
         this.creditTime = creditTime;
 
+    }
+
+    public ModelOfRanking(final CustomerModelFiltered customerModelFiltered) {
+        this.creditType = customerModelFiltered.getCreditType();
+        this.creditHistoryType = customerModelFiltered.getCreditHistoryType();
+        this.loanAmount = customerModelFiltered.getLoanAmount();
+        this.creditTime = customerModelFiltered.getCreditTime();
+        this.customerAge = customerModelFiltered.getCustomerAge();
+        this.customerIncome = customerModelFiltered.getCustomerIncome();
     }
 
     public Integer getCustomerAge() {
