@@ -1,6 +1,7 @@
 package com.example.bank.mailmessage;
 
 import com.example.bank.customer.creating_requests.requests.CustomerRequest;
+import com.example.bank.customer.dto.CustomerModel;
 import com.example.bank.mailmessage.PDFGenerator.PdfGenerator;
 import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,16 +29,16 @@ public class EmailService {
         this.javaMailSender = javaMailSender;
     }
 
-    public void sendEmailWithAttachment(String email)
+    public void sendEmailWithAttachment(CustomerModel customerModel)
             throws MessagingException, DocumentException, IOException {
 
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        helper.setTo(email);
-        helper.setSubject("this is subject");
-        helper.setText("this is text");
-        String filePath = pdfGenerator.generatePdf("this is content");
+        helper.setTo(customerModel.getCustomerInfoModel().getEmail());
+        helper.setSubject("");
+        helper.setText("  ");
+        String filePath = pdfGenerator.generatePdf("this is content", customerModel);
 
         File file = new File(filePath);
         helper.addAttachment(file.getName(), file);
