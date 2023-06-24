@@ -4,7 +4,6 @@ import com.example.acra.customer.bank.Banks;
 import com.example.acra.customer.bank.CreditType;
 import com.example.acra.customer.entity.CreditEntity;
 import com.example.acra.customer.requests.creating_requests.CreditRequest;
-
 import java.sql.Date;
 
 public class CreditModel {

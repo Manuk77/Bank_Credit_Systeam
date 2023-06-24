@@ -1,6 +1,7 @@
 package com.example.bank.bank_model.portfolio;
 
 import com.example.bank.customer.creating_requests.requests.CustomerRequest;
+import com.example.bank.customer.dto.CustomerModel;
 import org.springframework.lang.NonNull;
 
 
@@ -8,31 +9,31 @@ import java.util.*;
 
 
 public class Portfolio {
-    private List<CustomerRequest> customerRequests;
+    private List<CustomerModel> customerModels;
     private List<CustomerWithMathModelFields> customersMath;
 
-    private final Map<Double, List<Integer>> mapL = new HashMap<>();
-    private final List<Double> L = new ArrayList<>();
+
+    private Double Sum = Double.MAX_VALUE;
     private List<Integer> acceptableLoan;
 
     public Portfolio() {
     }
 
-    public Portfolio(final List<CustomerRequest> customerRequests,
+    public Portfolio(final List<CustomerModel> customerModels,
                      final List<CustomerWithMathModelFields> customersMath) {
 
 
-        this.customerRequests = customerRequests;
+        this.customerModels = customerModels;
         this.customersMath = customersMath;
     }
 
 
-    public List<CustomerRequest> getCustomerRequests() {
-        return customerRequests;
+    public List<CustomerModel> getCustomerRequests() {
+        return customerModels;
     }
 
-    public void setCustomerRequests(final List<CustomerRequest> customerRequests) {
-        this.customerRequests = customerRequests;
+    public void setCustomerRequests(final List<CustomerModel> customerModels) {
+        this.customerModels = customerModels;
     }
 
     public List<CustomerWithMathModelFields> getCustomersMath() {
@@ -73,8 +74,10 @@ public class Portfolio {
                         Math.pow(customersMath.get(i).getW(), 2));
 
             }
-            L.add(summ);
-            mapL.put(summ, listN);
+            if (summ < Sum) {
+                Sum = summ;
+                acceptableLoan = listN;
+            }
 
         }
 
@@ -86,13 +89,13 @@ public class Portfolio {
      *
      * @return acceptable customerRequest loans list
      */
-    private @NonNull List<CustomerRequest> optimalLoans() {
-        List<CustomerRequest> optimalLoans = new ArrayList<>();
-        acceptableLoan = allPossibleOptions();
+    private List<CustomerModel> optimalLoans() {
+        List<CustomerModel> optimalLoans = new ArrayList<>();
+        allPossibleOptions();
         System.out.println("boolean list size" + acceptableLoan.size());
         for (int i = 0; i < acceptableLoan.size(); ++i) {
             if (acceptableLoan.get(i) == 1)
-                optimalLoans.add(customerRequests.get(i));
+                optimalLoans.add(customerModels.get(i));
 
         }
         return optimalLoans;
@@ -113,14 +116,14 @@ public class Portfolio {
      *      .  .  .  .  ...  .
      *     [1, 1, 1, 1, ..., 1]
      */
-    private List<Integer> allPossibleOptions() {
+    private void allPossibleOptions() {
         int k = customersMath.size(); // Length of the list
         int totalOptions = (int) Math.pow(2, k) - 1;
-        List<Integer> option = new ArrayList<>();
+
 
         // Create a two-dimensional list to store the options
         for (int i = 1; i <= totalOptions; i++) {
-
+            List<Integer> option = new ArrayList<>();
 
             for (int j = 0; j < k; j++) {
                 int bit = (i >> j) & 1;
@@ -128,23 +131,21 @@ public class Portfolio {
             }
 
             capacityConstraint(option);
-            if (i == 1023)
-                break;
-            option.clear();
+
         }
 
-        return mapL.get(Collections.min(L));
+       // return mapL.get(Collections.min(L));
        // System.out.println(acceptableLoan);
 
     }
 
    private void printOptimalLoans() {
-        for (CustomerRequest customerRequest: optimalLoans()) {
-            System.out.println(customerRequest);
+        for (CustomerModel customerModel: optimalLoans()) {
+            System.out.println(customerModel);
         }
    }
 
-    public List<CustomerRequest> getOptimalCustomersList() {
+    public List<CustomerModel> getOptimalCustomersList() {
         return optimalLoans();
     }
 }

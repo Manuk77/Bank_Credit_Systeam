@@ -72,7 +72,7 @@ public record CreditRequest(
                 creditModel.getLoanAmount(),
                 creditModel.getCreditType().toString(),
                 creditModel.getPaymentPerMonth(),
-                creditModel.getCreditState().toString(),
+                creditModel.getStartCreditDate().toString(),
                 creditModel.getEndCreditDate().toString(),
                 creditModel.getCreditState().toString(),
                 creditModel.getAccepted().toString(),

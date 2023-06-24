@@ -3,8 +3,12 @@ package com.example.bank.customer.dto;
 
 
 
+import com.example.bank.customer.creating_requests.requests.CustomerRequest;
+import com.example.bank.customer.creating_requests.requests.CustomerRequestFiltered;
 import com.example.bank.customer.entity.CustomerEntity;
+import com.example.bank.customer.response.CustomerResponse;
 
+import java.util.List;
 
 
 public class CustomerModel {
@@ -23,6 +27,26 @@ public class CustomerModel {
         this.customerInfoModel = new CustomerInfoModel(customerEntity);
         this.workingPlaceModel = new WorkingPlaceModel(customerEntity.getWorkingPlace());
         this.customerHistoryModel = new CustomerHistoryModel(customerEntity.getCustomerHistory());
+    }
+
+    public CustomerModel(final CustomerResponse customerResponse) {
+        this.addressModel = new AddressModel(customerResponse.addressResponse());
+        this.passportModel = new PassportModel(customerResponse.passportResponse());
+        this.customerInfoModel = new CustomerInfoModel(customerResponse.customerInfoResponse());
+        this.customerHistoryModel = new CustomerHistoryModel(customerResponse.customerHistoryResponse());
+        this.workingPlaceModel = new WorkingPlaceModel(customerResponse.workingPlaceResponse());
+    }
+
+    public CustomerModel(final CustomerRequestFiltered customerRequestFiltered, final List<CreditModel> creditModel) {
+        this.addressModel = new AddressModel(customerRequestFiltered.addressRequest());
+        this.passportModel = new PassportModel(customerRequestFiltered.passportRequest());
+        this.customerInfoModel = new CustomerInfoModel(customerRequestFiltered.customerInfoRequest());
+        this.customerHistoryModel = new CustomerHistoryModel(
+                customerRequestFiltered.workingPlaceRequest().salary(),
+                false,
+                (short)600,
+                creditModel);
+        this.workingPlaceModel = new WorkingPlaceModel(customerRequestFiltered.workingPlaceRequest());
     }
 
 

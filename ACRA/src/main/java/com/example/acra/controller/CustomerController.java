@@ -35,8 +35,9 @@ public class CustomerController {
 
 
     @PatchMapping(value = "/updateCredit/{passportNumber}")
-    public Boolean updateCredit(@RequestBody @NonNull final CreditRequest creditRequest,
-                                @PathVariable @NonNull final String passportNumber) {
+    public Boolean updateCredit(@RequestBody  final CreditRequest creditRequest,
+                                @PathVariable @NonNull final  String passportNumber) {
+
         return customerService.updateCredit(new CreditModel(creditRequest), passportNumber);
     }
 
