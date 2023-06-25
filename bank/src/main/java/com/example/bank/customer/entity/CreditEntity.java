@@ -26,7 +26,7 @@ public class CreditEntity {
     @Column(name = "credit_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private CreditType creditType;
-    @Column(name = "payment_per_month", nullable = false, length = 7)
+    @Column(name = "payment_per_month", nullable = false, length = 30)
     private String paymentPerMonth;
     @Column(name = "start_credit_date", nullable = false)
     private Date startCreditDate;
@@ -68,6 +68,8 @@ public class CreditEntity {
         this.startCreditDate = creditModel.getStartCreditDate();
         this.endCreditDate = creditModel.getEndCreditDate();
         this.percent = creditModel.getPercent();
+        this.creditState = creditModel.getCreditState();
+        this.isAccepted = creditModel.getAccepted();
         this.paymentPerMonth = creditModel.getPaymentPerMonth();
     }
 

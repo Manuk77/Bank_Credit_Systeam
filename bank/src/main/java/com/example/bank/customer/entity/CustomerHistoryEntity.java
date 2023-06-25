@@ -34,8 +34,7 @@ public class CustomerHistoryEntity {
     }
 
     public CustomerHistoryEntity(final String salary, final Boolean hasActiveCredit,
-                                 final byte activeCreditCount, final short creditScore,
-                                 final List<CreditEntity> credits) {
+                                 final short creditScore, final List<CreditEntity> credits) {
 
         this.salary = salary;
         this.hasActiveCredit = hasActiveCredit;

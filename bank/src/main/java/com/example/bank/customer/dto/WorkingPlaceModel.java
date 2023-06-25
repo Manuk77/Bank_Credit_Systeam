@@ -39,4 +39,12 @@ public class WorkingPlaceModel {
     public void setSalary(String salary) {
         this.salary = salary;
     }
+
+    @Override
+    public String toString() {
+        return "WorkingPlaceModel{" +
+                "name='" + name + '\'' +
+                ", salary='" + salary + '\'' +
+                '}';
+    }
 }

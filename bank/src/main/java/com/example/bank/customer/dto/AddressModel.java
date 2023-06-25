@@ -51,4 +51,13 @@ public class AddressModel {
     public void setStreet(final String street) {
         this.street = street;
     }
+
+    @Override
+    public String toString() {
+        return "AddressModel{" +
+                "country='" + country + '\'' +
+                ", city='" + city + '\'' +
+                ", street='" + street + '\'' +
+                '}';
+    }
 }

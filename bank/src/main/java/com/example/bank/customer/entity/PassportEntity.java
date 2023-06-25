@@ -26,7 +26,7 @@ public class PassportEntity {
     private Date expiry;
     @Column(name = "authority", nullable = false, length = 50)
     private String authority;
-    @Column(name = "gender", nullable = false, length = 6)
+    @Column(name = "gender", nullable = false, length = 8)
     private String gender;
     @Column(name = "flag", nullable = false)
     private Boolean flag;

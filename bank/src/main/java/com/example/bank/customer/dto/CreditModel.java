@@ -19,7 +19,6 @@ public class CreditModel {
     private Date endCreditDate;
     private Byte percent;
     private Boolean creditState;
-
     private Boolean isAccepted;
 
 
@@ -154,5 +153,20 @@ public class CreditModel {
 
     public void setCreditState(Boolean creditState) {
         this.creditState = creditState;
+    }
+
+    @Override
+    public String toString() {
+        return "CreditModel{" +
+                "bankName=" + bankName +
+                ", loanAmount='" + loanAmount + '\'' +
+                ", creditType=" + creditType +
+                ", paymentPerMonth='" + paymentPerMonth + '\'' +
+                ", startCreditDate=" + startCreditDate +
+                ", endCreditDate=" + endCreditDate +
+                ", percent=" + percent +
+                ", creditState=" + creditState +
+                ", isAccepted=" + isAccepted +
+                '}';
     }
 }
