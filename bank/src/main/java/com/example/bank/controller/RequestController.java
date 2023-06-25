@@ -11,6 +11,7 @@ import com.example.bank.mailmessage.EmailService;
 import com.example.bank.service.RequestService;
 import com.itextpdf.text.DocumentException;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 
@@ -47,17 +48,28 @@ public class RequestController {
      */
 
     @PostMapping("/risk")
-    public @ResponseBody Boolean getInfo(@RequestBody final CustomerRequestFiltered customerRequestFiltered) {
+    public @ResponseBody List<CustomerResponse> getInfo(@Valid @RequestBody final CustomerRequestFiltered customerRequestFiltered) {
         final String creditTime = customerRequestFiltered.creditRequest().creditTime();
         CustomerModel customerModel = getFromCustomerRequestFiltered(customerRequestFiltered);
         final String path = "http://localhost:8080/Customer/getInfo/" + customerRequestFiltered.passportRequest().passportNumber();
         RestTemplate rt = new RestTemplate();
         Optional<CustomerResponse> customerOp = Optional.ofNullable(rt.getForObject(path, CustomerResponse.class));
         List<CustomerModel> customerModels = requestService.calculateRisks(customerModel, customerOp, creditTime);
+
         if (customerModels == null) {
-            return false;
+
+            bankController.saveInfoRejectedCustomers(CustomerRequest.getFromModel(customerModel));
+            try {
+                emailService.sendEmailWithAttachment(customerModel);
+            } catch (MessagingException | DocumentException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return List.of(CustomerResponse.getFromModel(customerModel));
         }
+        List<CustomerResponse> customerResponses = new ArrayList<>();
         for (CustomerModel cm : customerModels) {
+            customerResponses.add(CustomerResponse.getFromModel(cm));
+
             if (postAcceptedRequests(cm)) {
                 try {
                     emailService.sendEmailWithAttachment(cm);
@@ -66,7 +78,7 @@ public class RequestController {
                 }
             }
         }
-        return true;
+        return customerResponses;
     }
 
     /**

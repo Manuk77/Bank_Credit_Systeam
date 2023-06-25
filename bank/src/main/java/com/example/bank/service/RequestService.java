@@ -35,7 +35,6 @@ public class RequestService {
             }
             return new ArrayList<>();
         }
-
         return null;
     }
 
