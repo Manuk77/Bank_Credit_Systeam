@@ -4,7 +4,6 @@ import com.example.bank.bank_model.portfolio.CustomerWithMathModelFields;
 import com.example.bank.bank_model.portfolio.Portfolio;
 import com.example.bank.bank_model.risk_calculating.CreditHistoryType;
 import com.example.bank.bank_model.risk_calculating.RiskCalculating;
-import com.example.bank.customer.dto.CreditModel;
 import com.example.bank.customer.dto.CustomerModel;
 import com.example.bank.customer.dto.CustomerModelFiltered;
 import com.example.bank.customer.response.CustomerResponse;
@@ -17,7 +16,6 @@ import java.util.Optional;
 public class RequestService {
     private static int countOfRequests;
     private static final List<CustomerModel> customerModels = new ArrayList<>();
-
     private final RiskCalculating riskCalculating = new RiskCalculating();
     private final Long capitalOfBank = 40_000_000L;
     private final List<FilterCustomerInfo> filterCustomerInfos = new ArrayList<>();
@@ -29,8 +27,11 @@ public class RequestService {
             if (countOfRequests == 10) {
                 countOfRequests = 0;
                 Portfolio portfolio = new Portfolio(customerModels, getMathModelFields(riskCalculating.getPD()));
-                return portfolio.getOptimalCustomersList();
-
+                List<CustomerModel> customerModels1 = portfolio.getOptimalCustomersList();
+                if (customerModels1 != null) {
+                    printNotAcceptedLoans();
+                    return addingMissingFieldsOfCredit(customerModels1, RiskCalculating.creditTimes);
+                }
                 // portfolio optimization
             }
             return new ArrayList<>();
@@ -43,7 +44,7 @@ public class RequestService {
 
         filterCustomerInfos.add(new FilterCustomerInfo(getModelForRanking(customerModel, creditTime)));
         //rankedModels.add(FilterCustomerInfo.filterCustomerRequest().rankedModel());
-        riskCalculating.setRankedModels(FilterCustomerInfo.filterCustomerRequest().rankedModel());
+        riskCalculating.setRankedModels(FilterCustomerInfo.filterCustomerModelOrElse().rankedModel(), creditTime);
         if (riskCalculating.allRiskCalculations()) {
             customerModels.add(customerModel);
             return true;
@@ -58,12 +59,18 @@ public class RequestService {
                               final String creditTime) {
 
         CustomerModel customerModel1 = new CustomerModel(customerResponse);
+        if (Integer.parseInt(customerModel1.getWorkingPlaceModel().getSalary()) != Integer.parseInt(customerModel.getWorkingPlaceModel().getSalary())) {
+            customerModel1.getWorkingPlaceModel().setSalary(customerModel.getWorkingPlaceModel().getSalary());
+            customerModel1.getCustomerHistoryModel().setSalary(customerModel.getWorkingPlaceModel().getSalary());
+        }
+
         customerModel1.getCustomerHistoryModel().getCreditModels().add(customerModel.getCustomerHistoryModel().getCreditModels().get(
                 customerModel.getCustomerHistoryModel().getCreditModels().size() - 1));
-//        customerModel.getCustomerHistoryModel().setCreditScore(Short.valueOf(customerResponse.customerHistoryResponse().creditScore()));
+
         filterCustomerInfos.add(new FilterCustomerInfo(getModelForRanking(customerModel1, creditTime)));
-        //rankedModels.add(FilterCustomerInfo.filterCustomerRequest().rankedModel());
-        RiskCalculating riskCalculating = new RiskCalculating(FilterCustomerInfo.filterCustomerRequest().rankedModel());
+        FilterCustomerInfo.setCustomerHistoryModel(customerModel1.getCustomerHistoryModel());
+
+        RiskCalculating riskCalculating = new RiskCalculating(FilterCustomerInfo.filterCustomerModel().rankedModel());
 
 
         if (riskCalculating.allRiskCalculations()) {
@@ -134,5 +141,28 @@ public class RequestService {
         if (score > 799 && score < 851)
             return CreditHistoryType.EXCEPTIONAL;
         return CreditHistoryType.POOR;
+    }
+
+    private List<CustomerModel> addingMissingFieldsOfCredit(final List<CustomerModel> customerModels, List<String> creditTimes) {
+        int percent = 10;
+        double paymentPerMonth;
+        for (int i = 0; i < customerModels.size(); ++i) {
+            paymentPerMonth =  (Integer.valueOf(customerModels.get(i).getCustomerHistoryModel().getCreditModels().get(
+                    customerModels.get(i).getCustomerHistoryModel().getCreditModels().size() - 1).getLoanAmount()) * 1.1 / Integer.valueOf(creditTimes.get(i)));
+            customerModels.get(i).getCustomerInfoModel().setFlag(true);
+            customerModels.get(i).getCustomerHistoryModel().getCreditModels().get(customerModels.get(i).getCustomerHistoryModel().getCreditModels().size() - 1).setPercent((byte) percent);
+            customerModels.get(i).getCustomerHistoryModel().getCreditModels().get(customerModels.get(i).getCustomerHistoryModel().getCreditModels().size() - 1).setPaymentPerMonth("" + paymentPerMonth);
+            customerModels.get(i).getCustomerHistoryModel().getCreditModels().get(customerModels.get(i).getCustomerHistoryModel().getCreditModels().size() - 1).setCreditState(true);
+            customerModels.get(i).getCustomerHistoryModel().getCreditModels().get(customerModels.get(i).getCustomerHistoryModel().getCreditModels().size() - 1).setAccepted(true);
+            customerModels.get(i).getCustomerHistoryModel().setHasActiveCredit(true);
+            System.out.println(customerModels.get(i));
+        }
+        return customerModels;
+    }
+
+    private void printNotAcceptedLoans() {
+        for (CustomerModel cm : Portfolio.getNotIncludedCustomerModelLoans()) {
+            System.out.println(cm);
+        }
     }
 }

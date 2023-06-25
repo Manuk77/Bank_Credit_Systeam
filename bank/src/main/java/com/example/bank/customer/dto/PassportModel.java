@@ -115,4 +115,17 @@ public class PassportModel {
         this.authority = authority;
     }
 
+    @Override
+    public String toString() {
+        return "PassportModel{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthDate=" + birthDate +
+                ", gender='" + gender + '\'' +
+                ", passport_number='" + passport_number + '\'' +
+                ", issueDate=" + issueDate +
+                ", expiryDate=" + expiryDate +
+                ", authority='" + authority + '\'' +
+                '}';
+    }
 }

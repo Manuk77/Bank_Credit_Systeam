@@ -1,9 +1,4 @@
 package com.example.bank.customer.dto;
-
-
-
-
-import com.example.bank.customer.creating_requests.requests.CustomerRequest;
 import com.example.bank.customer.creating_requests.requests.CustomerRequestFiltered;
 import com.example.bank.customer.entity.CustomerEntity;
 import com.example.bank.customer.response.CustomerResponse;
@@ -88,5 +83,16 @@ public class CustomerModel {
 
     public void setCustomerHistoryModel(CustomerHistoryModel customerHistoryModel) {
         this.customerHistoryModel = customerHistoryModel;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomerModel{" +
+                "addressModel=" + addressModel + "\n" +
+                ", passportModel=" + passportModel + "\n" +
+                ", customerInfoModel=" + customerInfoModel + "\n" +
+                ", workingPlaceModel=" + workingPlaceModel + "\n" +
+                ", customerHistoryModel=" + customerHistoryModel + "\n" +
+                '}';
     }
 }

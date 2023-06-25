@@ -5,6 +5,7 @@ import com.example.bank.bank_model.risk_calculating.ModelOfRanking;
 import com.example.bank.customer.bank.CreditType;
 import com.example.bank.customer.creating_requests.requests.CustomerRequestFiltered;
 import com.example.bank.customer.dto.CreditModel;
+import com.example.bank.customer.dto.CustomerHistoryModel;
 import com.example.bank.customer.dto.CustomerModel;
 import com.example.bank.customer.dto.CustomerModelFiltered;
 import com.example.bank.customer.response.CreditResponse;
@@ -15,7 +16,7 @@ import java.util.List;
 public class FilterCustomerInfo {
 
     private static CustomerModelFiltered customerModelFiltered;
-    private static CustomerResponse customerResponse;
+    private static CustomerHistoryModel customerHistoryModel;
 
 
     public FilterCustomerInfo(final CustomerModelFiltered customerModelFiltered) {
@@ -23,19 +24,18 @@ public class FilterCustomerInfo {
     }
 
 
-    public static ModelOfRanking filterCustomerResponse() {
+    public static ModelOfRanking filterCustomerModel() {
 
         List<CreditModel> creditModels = new ArrayList<>();
-        for (final CreditResponse cr : customerResponse.customerHistoryResponse().creditResponse()) {
-            creditModels.add(new CreditModel(cr));
+        for (final CreditModel cm : customerHistoryModel.getCreditModels()) {
+            creditModels.add(cm);
         }
         customerModelFiltered.setCustomerIncome(customerIncome(creditModels, customerModelFiltered.getCustomerIncome()));
         return new ModelOfRanking(customerModelFiltered);
 
     }
 
-    public static  ModelOfRanking filterCustomerRequest() {
-
+    public static  ModelOfRanking filterCustomerModelOrElse() {
         return new ModelOfRanking(customerModelFiltered);
     }
 
@@ -84,7 +84,7 @@ public class FilterCustomerInfo {
     }
 
 
-    public void setCustomerResponse(CustomerResponse customerResponse) {
-        FilterCustomerInfo.customerResponse = customerResponse;
+    public static void setCustomerHistoryModel(final CustomerHistoryModel customerHistoryModel) {
+        FilterCustomerInfo.customerHistoryModel = customerHistoryModel;
     }
 }

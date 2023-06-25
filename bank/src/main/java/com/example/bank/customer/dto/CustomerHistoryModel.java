@@ -106,4 +106,15 @@ public class CustomerHistoryModel {
         creditResponses.forEach(creditResponse -> creditModels.add(new CreditModel(creditResponse)));
         return  creditModels;
     }
+
+
+    @Override
+    public String toString() {
+        return "CustomerHistoryModel{" +
+                "salary='" + salary + '\'' +
+                ", hasActiveCredit=" + hasActiveCredit +
+                ", creditScore=" + creditScore +
+                ", creditModels=" + creditModels +
+                '}';
+    }
 }

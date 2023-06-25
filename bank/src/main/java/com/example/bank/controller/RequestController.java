@@ -57,7 +57,6 @@ public class RequestController {
         List<CustomerModel> customerModels = requestService.calculateRisks(customerModel, customerOp, creditTime);
 
         if (customerModels == null) {
-
             bankController.saveInfoRejectedCustomers(CustomerRequest.getFromModel(customerModel));
             try {
                 emailService.sendEmailWithAttachment(customerModel);

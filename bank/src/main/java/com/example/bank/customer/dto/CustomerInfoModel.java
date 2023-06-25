@@ -96,10 +96,25 @@ public class CustomerInfoModel {
         this.email = email;
     }
 
+    public void setFlag(Boolean flag) {
+        this.flag = flag;
+    }
 
     public Boolean getFlag() {
         return flag;
     }
 
 
+    @Override
+    public String toString() {
+        return "CustomerInfoModel{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthDate='" + birthDate + '\'' +
+                ", age=" + age +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", flag=" + flag +
+                '}';
+    }
 }

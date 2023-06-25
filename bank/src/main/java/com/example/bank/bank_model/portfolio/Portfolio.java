@@ -1,8 +1,5 @@
 package com.example.bank.bank_model.portfolio;
-
-import com.example.bank.customer.creating_requests.requests.CustomerRequest;
 import com.example.bank.customer.dto.CustomerModel;
-import org.springframework.lang.NonNull;
 
 
 import java.util.*;
@@ -10,9 +7,8 @@ import java.util.*;
 
 public class Portfolio {
     private List<CustomerModel> customerModels;
+    private static List<CustomerModel> notIncludedCustomerModelLoans = new ArrayList<>();
     private List<CustomerWithMathModelFields> customersMath;
-
-
     private Double Sum = Double.MAX_VALUE;
     private List<Integer> acceptableLoan;
 
@@ -92,12 +88,18 @@ public class Portfolio {
     private List<CustomerModel> optimalLoans() {
         List<CustomerModel> optimalLoans = new ArrayList<>();
         allPossibleOptions();
-        System.out.println("boolean list size" + acceptableLoan.size());
+        int j = 0;
         for (int i = 0; i < acceptableLoan.size(); ++i) {
-            if (acceptableLoan.get(i) == 1)
+
+            if (acceptableLoan.get(i) == 1) {
+                j++;
                 optimalLoans.add(customerModels.get(i));
+            }else {
+                notIncludedCustomerModelLoans.add(customerModels.get(i));
+            }
 
         }
+        System.out.println("acceptable customer loan count is -> " + j);
         return optimalLoans;
     }
 
@@ -124,7 +126,6 @@ public class Portfolio {
         // Create a two-dimensional list to store the options
         for (int i = 1; i <= totalOptions; i++) {
             List<Integer> option = new ArrayList<>();
-
             for (int j = 0; j < k; j++) {
                 int bit = (i >> j) & 1;
                 option.add(bit);
@@ -134,18 +135,16 @@ public class Portfolio {
 
         }
 
-       // return mapL.get(Collections.min(L));
-       // System.out.println(acceptableLoan);
 
     }
 
-   private void printOptimalLoans() {
-        for (CustomerModel customerModel: optimalLoans()) {
-            System.out.println(customerModel);
-        }
-   }
+
 
     public List<CustomerModel> getOptimalCustomersList() {
         return optimalLoans();
+    }
+
+    public static List<CustomerModel> getNotIncludedCustomerModelLoans() {
+        return notIncludedCustomerModelLoans;
     }
 }
