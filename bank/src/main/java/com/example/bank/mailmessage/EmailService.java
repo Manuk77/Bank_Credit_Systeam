@@ -1,6 +1,6 @@
 package com.example.bank.mailmessage;
 
-import com.example.bank.customer.creating_requests.requests.CustomerRequest;
+
 import com.example.bank.customer.dto.CustomerModel;
 import com.example.bank.mailmessage.PDFGenerator.PdfGenerator;
 import com.itextpdf.text.DocumentException;
