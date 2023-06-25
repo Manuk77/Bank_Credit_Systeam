@@ -12,9 +12,9 @@ public class WorkingPlaceEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 30)
     private String name;
-    @Column(name = "salary")
+    @Column(name = "salary", nullable = false, length = 12)
     private String salary;
 
     @OneToMany(mappedBy = "workingPlace")

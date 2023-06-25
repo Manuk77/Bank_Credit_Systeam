@@ -124,4 +124,19 @@ public class CreditModel {
     public void setPercent(Byte percent) {
         this.percent = percent;
     }
+
+    @Override
+    public String toString() {
+        return "CreditModel{" +
+                "bankName=" + bankName +
+                ", loanAmount='" + loanAmount + '\'' +
+                ", creditType=" + creditType +
+                ", paymentPerMonth='" + paymentPerMonth + '\'' +
+                ", startCreditDate=" + startCreditDate +
+                ", endCreditDate=" + endCreditDate +
+                ", creditState=" + creditState +
+                ", isAccepted=" + isAccepted +
+                ", percent=" + percent +
+                '}';
+    }
 }
