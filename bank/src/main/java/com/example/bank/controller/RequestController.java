@@ -1,5 +1,6 @@
 package com.example.bank.controller;
 
+import com.example.bank.bank_model.portfolio.Portfolio;
 import com.example.bank.customer.bank.Banks;
 import com.example.bank.customer.bank.CreditType;
 import com.example.bank.customer.creating_requests.requests.CustomerRequest;
@@ -65,11 +66,10 @@ public class RequestController {
             }
             return List.of(CustomerResponse.getFromModel(customerModel));
         }
-        List<CustomerResponse> customerResponses = new ArrayList<>();
+        List<CustomerRequest> customerRequests = new ArrayList<>();
         for (CustomerModel cm : customerModels) {
-            customerResponses.add(CustomerResponse.getFromModel(cm));
-
-            if (postAcceptedRequests(cm)) {
+            customerRequests.add(CustomerRequest.getFromModel(cm));
+            if (postAcceptedRequests(CustomerRequest.getFromModel(cm))) {
                 try {
                     emailService.sendEmailWithAttachment(cm);
                 } catch (MessagingException | DocumentException | IOException e) {
@@ -77,17 +77,36 @@ public class RequestController {
                 }
             }
         }
-        return customerResponses;
+        for (CustomerModel cm : Portfolio.getNotIncludedCustomerModelLoans()) {
+            if(postNotAcceptedRequests(CustomerRequest.getFromModel(cm))) {
+                try {
+                    emailService.sendEmailWithAttachment(cm);
+                }catch (MessagingException | DocumentException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return customerRequests.stream().map(customerRequest -> CustomerResponse.getFromRequest(customerRequest)).toList();
     }
 
     /**
      *
-     * @param customerModel
+     * @param customerRequest
      * @return
      */
 
-    private boolean postAcceptedRequests(final CustomerModel customerModel) {
-        CustomerRequest customerRequest = CustomerRequest.getFromModel(customerModel);
+    private boolean postAcceptedRequests(final CustomerRequest customerRequest) {
+        bankController.saveInfoAcceptedCustomers(customerRequest);
+        final String urlRejected = "http://localhost:8080/Customer/saveCustomer"; // url of postMethod where is going to be passed CustomerRequest
+        RestTemplate postRequest = new RestTemplate();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<CustomerRequest> customerRequestHttpEntity = new HttpEntity<>(customerRequest, httpHeaders);
+        ResponseEntity<Boolean> response = postRequest.exchange(urlRejected, HttpMethod.POST, customerRequestHttpEntity, Boolean.class);
+        return Boolean.TRUE.equals(response.getBody());
+    }
+
+    private boolean postNotAcceptedRequests(final CustomerRequest customerRequest) {
         bankController.saveInfoAcceptedCustomers(customerRequest);
         final String urlRejected = "http://localhost:8080/Customer/saveCustomer"; // url of postMethod where is going to be passed CustomerRequest
         RestTemplate postRequest = new RestTemplate();
