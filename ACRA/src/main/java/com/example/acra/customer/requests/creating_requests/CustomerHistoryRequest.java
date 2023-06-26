@@ -12,7 +12,7 @@ import java.util.List;
 public record CustomerHistoryRequest(
 
         @NotNullEmptyBlankString
-        @Pattern(regexp = "^([֏$€₽])?\\d+(\\.\\d+)?$")
+        @Pattern(regexp = "^([6-9]\\d{4}|[1-9]\\d{5,})$" )//"^([֏$€₽])?\\d+(\\.\\d+)?$"
         @JsonProperty("salary")
         String salary,
 
