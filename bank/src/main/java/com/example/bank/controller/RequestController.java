@@ -62,7 +62,7 @@ public class RequestController {
         if (customerModels == null) {
             bankController.saveInfoRejectedCustomers(CustomerRequest.getFromModel(customerModel));
             try {
-                emailService.sendEmailRejectedCustomers(customerModel);
+                emailService.sendEmailCustomers("merjvel e",customerModel);
             } catch (MessagingException | DocumentException | IOException e) {
                 throw new RuntimeException(e);
             }
@@ -73,7 +73,7 @@ public class RequestController {
             customerRequests.add(CustomerRequest.getFromModel(cm));
             if (postAcceptedRequests(CustomerRequest.getFromModel(cm))) {
                 try {
-                    emailService.sendEmailAcceptedCustomers(cm);
+                    emailService.sendEmailCustomers("hastatvel e",cm);
                 } catch (MessagingException | DocumentException | IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -82,13 +82,13 @@ public class RequestController {
         for (CustomerModel cm : Portfolio.getNotIncludedCustomerModelLoans()) {
             if(postNotAcceptedRequests(CustomerRequest.getFromModel(cm))) {
                 try {
-                    emailService.sendEmailRejectedCustomers(cm);
+                    emailService.sendEmailCustomers("merjvel e portfolioic", cm);
                 }catch (MessagingException | DocumentException | IOException e) {
                     throw new RuntimeException(e);
                 }
             }
         }
-        return customerRequests.stream().map(customerRequest -> CustomerResponse.getFromRequest(customerRequest)).toList();
+        return customerRequests.stream().map(CustomerResponse::getFromRequest).toList();
     }
 
     /**
