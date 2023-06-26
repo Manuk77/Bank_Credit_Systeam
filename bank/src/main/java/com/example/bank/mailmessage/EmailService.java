@@ -29,7 +29,24 @@ public class EmailService {
         this.javaMailSender = javaMailSender;
     }
 
-    public void sendEmailWithAttachment(CustomerModel customerModel)
+    public void sendEmailAcceptedCustomers(CustomerModel customerModel)
+            throws MessagingException, DocumentException, IOException {
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        helper.setTo(customerModel.getCustomerInfoModel().getEmail());
+        helper.setSubject("");
+        helper.setText("  ");
+        String filePath = pdfGenerator.generatePdf("this is content", customerModel);
+
+        File file = new File(filePath);
+        helper.addAttachment(file.getName(), file);
+
+        javaMailSender.send(message);
+        System.out.println("sending");
+    }
+    public void sendEmailRejectedCustomers(CustomerModel customerModel)
             throws MessagingException, DocumentException, IOException {
 
         MimeMessage message = javaMailSender.createMimeMessage();

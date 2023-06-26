@@ -62,7 +62,7 @@ public class RequestController {
         if (customerModels == null) {
             bankController.saveInfoRejectedCustomers(CustomerRequest.getFromModel(customerModel));
             try {
-                emailService.sendEmailWithAttachment(customerModel);
+                emailService.sendEmailRejectedCustomers(customerModel);
             } catch (MessagingException | DocumentException | IOException e) {
                 throw new RuntimeException(e);
             }
@@ -73,7 +73,7 @@ public class RequestController {
             customerRequests.add(CustomerRequest.getFromModel(cm));
             if (postAcceptedRequests(CustomerRequest.getFromModel(cm))) {
                 try {
-                    emailService.sendEmailWithAttachment(cm);
+                    emailService.sendEmailAcceptedCustomers(cm);
                 } catch (MessagingException | DocumentException | IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -82,7 +82,7 @@ public class RequestController {
         for (CustomerModel cm : Portfolio.getNotIncludedCustomerModelLoans()) {
             if(postNotAcceptedRequests(CustomerRequest.getFromModel(cm))) {
                 try {
-                    emailService.sendEmailWithAttachment(cm);
+                    emailService.sendEmailRejectedCustomers(cm);
                 }catch (MessagingException | DocumentException | IOException e) {
                     throw new RuntimeException(e);
                 }
