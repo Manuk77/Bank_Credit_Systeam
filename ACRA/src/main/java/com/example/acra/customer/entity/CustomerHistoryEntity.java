@@ -16,11 +16,11 @@ public class CustomerHistoryEntity {
     private Long id;
     @Column(name = "salary", nullable = false, length = 10)
     private String salary;
-    @Column(name = "has_active_credit", nullable = false)
+    @Column(name = "has_active_credit", nullable = false, length = 10)
     private Boolean hasActiveCredit;
     // credit score is a score which helps to count the risks of giving credit to the customer
     // it's also noun as FICO score it's around [300 - 850] how high is the score that match lower is risk
-    @Column(name = "credit_score", nullable = false)
+    @Column(name = "credit_score", nullable = false, length = 10)
     private short creditScore;
     @OneToOne(mappedBy = "customerHistory")
     private CustomerEntity customerEntity;

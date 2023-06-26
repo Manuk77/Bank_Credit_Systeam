@@ -102,7 +102,7 @@ public class ModelOfRanking {
     }
 
     private int rankingIncome() {
-        if (customerIncome > 60_000 && customerIncome < 151_000)
+        if (customerIncome > 59_999 && customerIncome < 151_000)
             return 1;
         if (customerIncome > 150_000 && customerIncome < 201_000)
             return 2;
