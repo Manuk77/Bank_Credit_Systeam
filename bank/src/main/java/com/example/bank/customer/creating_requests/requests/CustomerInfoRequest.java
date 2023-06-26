@@ -2,11 +2,13 @@ package com.example.bank.customer.creating_requests.requests;
 
 import com.example.bank.customer.dto.CustomerInfoModel;
 import com.example.bank.customer.response.CustomerInfoResponse;
+
 import com.example.bank.validator.annotation.NotNullEmptyBlankString;
+import com.example.bank.validator.annotation.ValidAge;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
-
+@ValidAge
 public record CustomerInfoRequest(
 
 
@@ -28,13 +30,6 @@ public record CustomerInfoRequest(
         @JsonProperty("last_name")
         String lastName,
 
-        @NotNullEmptyBlankString
-        @Pattern(
-                regexp = "^(19[0-9]{2}|200[0-5])-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
-                message = "Date of birth must be between 1900 and 2005 "
-        )
-        @JsonProperty("dob")
-        String birthDate,
 
         @NotNullEmptyBlankString
         @Pattern(
@@ -46,14 +41,18 @@ public record CustomerInfoRequest(
 
         @NotNullEmptyBlankString
         @Pattern(
-                regexp = "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$",
+                regexp = "^(19[0-9]{2}|200[0-5])-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
+                message = "Date of birth must be between 1900 and 2005 "
+        )
+        @JsonProperty("dob")
+        String birthDate,
+
+        @NotNullEmptyBlankString
+        @Pattern(
+                regexp = "^\\+374\\s\\d{2}-\\d{3}-\\d{3}$",
                 message = """
                         The phone number must be like these:\s
-                        123-456-7890
-                        (123) 456-7890
-                        123 456 7890
-                        123.456.7890
-                        +91 (123) 456-7890"""
+                       +374 11-111-111"""
         )
         @JsonProperty("phone")
         String phone,
