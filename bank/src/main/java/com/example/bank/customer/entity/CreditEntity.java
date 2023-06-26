@@ -32,11 +32,11 @@ public class CreditEntity {
     private Date startCreditDate;
     @Column(name = "end_credit_date", nullable = false)
     private Date endCreditDate;
-    @Column(name = "credit_state")
+    @Column(name = "credit_state", nullable = false, length = 10)
     private Boolean creditState;
-    @Column(name = "is_accepted")
+    @Column(name = "is_accepted", nullable = false, length = 10)
     private Boolean isAccepted;
-    @Column(name = "percent", nullable = false)
+    @Column(name = "percent", nullable = false, length = 10)
     private byte percent;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "history_id", nullable = false)
