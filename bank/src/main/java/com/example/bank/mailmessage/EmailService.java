@@ -29,33 +29,16 @@ public class EmailService {
         this.javaMailSender = javaMailSender;
     }
 
-    public void sendEmailAcceptedCustomers(CustomerModel customerModel)
+    public void sendEmailCustomers(String content,CustomerModel customerModel)
             throws MessagingException, DocumentException, IOException {
 
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
         helper.setTo(customerModel.getCustomerInfoModel().getEmail());
-        helper.setSubject("");
-        helper.setText("  ");
-        String filePath = pdfGenerator.generatePdf("this is content", customerModel);
-
-        File file = new File(filePath);
-        helper.addAttachment(file.getName(), file);
-
-        javaMailSender.send(message);
-        System.out.println("sending");
-    }
-    public void sendEmailRejectedCustomers(CustomerModel customerModel)
-            throws MessagingException, DocumentException, IOException {
-
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
-        helper.setTo(customerModel.getCustomerInfoModel().getEmail());
-        helper.setSubject("");
-        helper.setText("  ");
-        String filePath = pdfGenerator.generatePdf("this is content", customerModel);
+        helper.setSubject("Texekanq bankic");
+        helper.setText("harcman ardyunq@ karox eq tesnel kcvac pdf-um");
+        String filePath = pdfGenerator.generatePdf( content,customerModel);
 
         File file = new File(filePath);
         helper.addAttachment(file.getName(), file);

@@ -43,21 +43,21 @@ public class RiskCalculating {
     private Boolean riskCounting() {
 
 
-//        final double betta0 = -0.04798;
-//        final double betta1 = -0.00553;
-//        final double betta2 = 0.096932;
-//        final double betta3 = 0.042873;
-//        final double betta4 = 0.151273;
-//        final double betta5 = -0.01447;
-//        final double betta6 = -0.00565;
+        final double betta0 = -0.04798;
+        final double betta1 = -0.00553;
+        final double betta2 = 0.096932;
+        final double betta3 = 0.042873;
+        final double betta4 = 0.151273;
+        final double betta5 = -0.01447;
+        final double betta6 = -0.00565;
 
-        final double betta0 = 0.333811373850653;
-        final double betta1 = 0.00624585073685336;
-        final double betta2 = 0.073415350552171;
-        final double betta3 = 0.000116718158751398;
-        final double betta4 = 0.0707717296999949;
-        final double betta5 = -0.0779933503359887;
-        final double betta6 = 0.101723516747402;
+//        final double betta0 = 0.333811373850653;
+//        final double betta1 = 0.00624585073685336;
+//        final double betta2 = 0.073415350552171;
+//        final double betta3 = 0.000116718158751398;
+//        final double betta4 = 0.0707717296999949;
+//        final double betta5 = -0.0779933503359887;
+//        final double betta6 = 0.101723516747402;
 
         List<Double> Y = new ArrayList<>();
         double y;
@@ -86,7 +86,7 @@ public class RiskCalculating {
      * DPt is probability of default set by the bank
      */
     private boolean logisticModel(final Double y) {
-        final double DPt = 0.58;
+        final double DPt = 0.59;
         double x = 1 - (1 / (1 + Math.pow(Math.E, y)));
         System.out.println("PDi = " + x);
         if (x > DPt) {
