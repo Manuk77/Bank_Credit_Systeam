@@ -15,25 +15,25 @@ public class CreditEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "credit_id")
     private Long id;
-    @Column(name = "bank_name", nullable = false)
+    @Column(name = "bank_name", nullable = false, length = 15)
     @Enumerated(EnumType.STRING)
     private Banks bankName;
     @Column(name = "loan_amount", nullable = false, length = 15)
     private String loanAmount;
-    @Column(name = "credit_type",nullable = false)
+    @Column(name = "credit_type",nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private CreditType creditType;
     @Column(name = "payment_per_month", nullable = false, length = 30)
     private String paymentPerMonth;
-    @Column(name = "start_credit_date", nullable = false)
+    @Column(name = "start_credit_date", nullable = false, length = 10)
     private Date startCreditDate;
-    @Column(name = "end_credit_date", nullable = false)
+    @Column(name = "end_credit_date", nullable = false, length = 10)
     private Date endCreditDate;
-    @Column(name = "credit_state")
+    @Column(name = "credit_state", nullable = false, length = 10)
     private Boolean creditState;
-    @Column(name = "is_accepted")
+    @Column(name = "is_accepted", nullable = false, length = 10)
     private Boolean isAccepted;
-    @Column(name = "percent", nullable = false)
+    @Column(name = "percent", nullable = false, length = 3)
     private byte percent;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "history_id", nullable = false)

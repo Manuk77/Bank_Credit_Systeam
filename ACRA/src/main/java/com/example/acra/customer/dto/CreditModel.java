@@ -42,7 +42,7 @@ public class CreditModel {
         this.loanAmount = creditRequest.loanAmount();
         this.endCreditDate = Date.valueOf(creditRequest.endCreditDate());
         this.bankName = Banks.valueOf(creditRequest.bankName());
-        this.creditState = Boolean.valueOf(creditRequest.creditType());
+        this.creditState = Boolean.valueOf(creditRequest.creditState());
         this.isAccepted = Boolean.valueOf(creditRequest.isAccepted());
     }
 
