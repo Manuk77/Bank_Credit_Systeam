@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The `CustomerService` class provides business logic for managing customer information and operations.
+ * It interacts with various repositories to perform CRUD operations on customer-related entities.
+ */
 @Service
 public class CustomerService {
     private final CustomerRepository customerRepository;
@@ -18,6 +22,17 @@ public class CustomerService {
     private final CreditRepository creditRepository;
     private final CustomerHistoryRepository customerHistoryRepository;
     private final WorkingPlaceRepository workingPlaceRepository;
+
+    /**
+     * Constructs a new instance of the `CustomerService` class.
+     *
+     * @param customerRepository         The repository for customer entities.
+     * @param passportRepository         The repository for passport entities.
+     * @param addressRepository          The repository for address entities.
+     * @param creditRepository           The repository for credit entities.
+     * @param customerHistoryRepository  The repository for customer history entities.
+     * @param workingPlaceRepository     The repository for working place entities.
+     */
     @Autowired
     public CustomerService(final CustomerRepository customerRepository,
                            final PassportRepository passportRepository,
@@ -33,6 +48,16 @@ public class CustomerService {
         this.workingPlaceRepository = workingPlaceRepository;
     }
 
+    /**
+     * Saves customer information by creating a new customer record.
+     *
+     * @param addressModel      The address model containing the customer's address information.
+     * @param passportModel     The passport model containing the customer's passport information.
+     * @param customerInfoModel The customer info model containing the customer's general information.
+     * @param customerHistory   The customer history model containing the customer's history information.
+     * @param workingPlaceModel The working place model containing the customer's working place information.
+     * @return `true` if the customer information is successfully saved, `false` otherwise.
+     */
     public boolean saveCustomer(final AddressModel addressModel,
                                 final PassportModel passportModel,
                                 final CustomerInfoModel customerInfoModel,
@@ -45,7 +70,14 @@ public class CustomerService {
 
     }
 
-    public Boolean updateCredit(final CreditModel creditModel, final  String passportNumber) {
+    /**
+     * Adds a new credit to the customer with the specified passport number.
+     *
+     * @param creditModel     The credit model containing the details of the new credit.
+     * @param passportNumber  The passport number of the customer.
+     * @return `true` if the new credit is successfully added, `false` otherwise.
+     */
+    public Boolean addNewCredit(final CreditModel creditModel, final  String passportNumber) {
         Optional<CustomerEntity> customerEntity =
                 customerRepository.findCustomerEntityByPassport_PassportNumber(passportNumber);
         if (customerEntity.isEmpty())
@@ -56,6 +88,12 @@ public class CustomerService {
         return true;
     }
 
+    /**
+     * Retrieves the customer information for the customer with the specified passport number.
+     *
+     * @param passportNumber The passport number of the customer.
+     * @return The customer model containing the retrieved customer information.
+     */
     public CustomerModel getInfo(final String passportNumber) {
         Optional<CustomerEntity> optionalCustomerEntity =
                 customerRepository.findCustomerEntityByPassport_PassportNumber(passportNumber);
@@ -69,6 +107,13 @@ public class CustomerService {
         return null;
     }
 
+    /**
+     * Retrieves the customer information for the customer with the specified first name and last name.
+     *
+     * @param firstName The first name of the customer.
+     * @param lastName  The last name of the customer.
+     * @return The customer model containing the retrieved customer information.
+     */
     public CustomerModel getInfo(final String firstName, final String lastName) {
         Optional<CustomerEntity> optionalCustomerEntity =
                 customerRepository.findCustomerEntityByPassport_FirstNameAndLastName(firstName, lastName);

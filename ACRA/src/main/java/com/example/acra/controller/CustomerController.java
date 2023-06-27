@@ -1,6 +1,6 @@
 package com.example.acra.controller;
 
-import com.example.acra.annotation.NotNullEmptyBlankString;
+
 import com.example.acra.customer.dto.*;
 import com.example.acra.customer.requests.creating_requests.CreditRequest;
 import com.example.acra.customer.requests.creating_requests.CustomerRequest;
@@ -11,18 +11,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * The `CustomerController` class is a REST controller that handles customer-related HTTP requests.
+ * It exposes endpoints for managing customer information, such as saving customer details, adding new credits,
+ * and retrieving customer information.
+ */
 @RestController
 @RequestMapping(value = "/Customer")
 public class CustomerController {
 
     private final CustomerService customerService;
 
+    /**
+     * Constructs a new instance of the `CustomerController` class.
+     *
+     * @param customerService The customer service used for handling customer-related operations.
+     */
     @Autowired
     public CustomerController(final CustomerService customerService) {
         this.customerService = customerService;
     }
 
-
+    /**
+     * Saves customer information by creating a new customer record.
+     *
+     * @param customerRequest The customer request object containing the customer details to be saved.
+     * @return `true` if the customer information is successfully saved, `false` otherwise.
+     */
     @PostMapping(value = "/saveCustomer")
     public Boolean saveInfo(@Valid @RequestBody final CustomerRequest customerRequest) {
         return customerService.saveCustomer(
@@ -34,21 +49,41 @@ public class CustomerController {
     }
 
 
-    @PatchMapping(value = "/updateCredit/{passportNumber}")
-    public Boolean updateCredit(@RequestBody  final CreditRequest creditRequest,
-                                @PathVariable @NonNull final  String passportNumber) {
+    /**
+     * Adds a new credit to the customer with the specified passport number.
+     *
+     * @param creditRequest   The credit request object containing the details of the new credit.
+     * @param passportNumber  The passport number of the customer.
+     * @return `true` if the new credit is successfully added, `false` otherwise.
+     */
+    @PatchMapping(value = "/addNewCredit/{passportNumber}")
+    public Boolean addNewCredit(@RequestBody  final CreditRequest creditRequest,
+                                @NonNull @PathVariable final  String passportNumber) {
 
-        return customerService.updateCredit(new CreditModel(creditRequest), passportNumber);
+        return customerService.addNewCredit(new CreditModel(creditRequest), passportNumber);
     }
 
+    /**
+     * Retrieves the customer information for the customer with the specified passport number.
+     *
+     * @param passportNumber The passport number of the customer.
+     * @return The customer response object containing the retrieved customer information.
+     */
     @GetMapping(value = "/getInfo/{passportNumber}")
-    public @ResponseBody CustomerResponse getInfo(@PathVariable @NonNull final String passportNumber) {
+    public @ResponseBody CustomerResponse getInfo(@NonNull @PathVariable final String passportNumber) {
         return CustomerResponse.getFromModel(customerService.getInfo(passportNumber));
     }
 
+    /**
+     * Retrieves the customer information for the customer with the specified first name and last name.
+     *
+     * @param firstName The first name of the customer.
+     * @param lastName  The last name of the customer.
+     * @return The customer response object containing the retrieved customer information.
+     */
     @GetMapping(value = "/getInfo/{firstName}/{lastName}")
-    public @ResponseBody CustomerResponse getInfo(@PathVariable @NonNull final String firstName,
-                                                  @PathVariable @NonNull final String lastName) {
+    public @ResponseBody CustomerResponse getInfo(@NonNull @PathVariable final String firstName,
+                                                  @NonNull @PathVariable final String lastName) {
         return CustomerResponse.getFromModel(customerService.getInfo(firstName, lastName));
     }
 
