@@ -11,6 +11,7 @@ import com.example.bank.customer.response.CustomerHistoryResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CustomerHistoryModel {
 
@@ -116,5 +117,18 @@ public class CustomerHistoryModel {
                 ", creditScore=" + creditScore +
                 ", creditModels=" + creditModels +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CustomerHistoryModel that = (CustomerHistoryModel) o;
+        return Objects.equals(salary, that.salary) && Objects.equals(hasActiveCredit, that.hasActiveCredit) && Objects.equals(creditScore, that.creditScore) && Objects.equals(creditModels, that.creditModels);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(salary, hasActiveCredit, creditScore, creditModels);
     }
 }

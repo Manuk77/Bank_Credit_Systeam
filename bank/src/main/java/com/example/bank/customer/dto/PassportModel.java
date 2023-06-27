@@ -6,6 +6,7 @@ import com.example.bank.customer.entity.PassportEntity;
 import com.example.bank.customer.response.PassportResponse;
 
 import java.sql.Date;
+import java.util.Objects;
 
 public class PassportModel {
     private String firstName;
@@ -127,5 +128,18 @@ public class PassportModel {
                 ", expiryDate=" + expiryDate +
                 ", authority='" + authority + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PassportModel that = (PassportModel) o;
+        return Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(birthDate, that.birthDate) && Objects.equals(gender, that.gender) && Objects.equals(passport_number, that.passport_number) && Objects.equals(issueDate, that.issueDate) && Objects.equals(expiryDate, that.expiryDate) && Objects.equals(authority, that.authority);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, birthDate, gender, passport_number, issueDate, expiryDate, authority);
     }
 }

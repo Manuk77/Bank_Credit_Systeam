@@ -9,6 +9,7 @@ import com.example.bank.customer.entity.CreditEntity;
 import com.example.bank.customer.response.CreditResponse;
 
 import java.sql.Date;
+import java.util.Objects;
 
 public class CreditModel {
     private Banks bankName;
@@ -168,5 +169,18 @@ public class CreditModel {
                 ", creditState=" + creditState +
                 ", isAccepted=" + isAccepted +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CreditModel that = (CreditModel) o;
+        return bankName == that.bankName && Objects.equals(loanAmount, that.loanAmount) && creditType == that.creditType && Objects.equals(paymentPerMonth, that.paymentPerMonth) && Objects.equals(startCreditDate, that.startCreditDate) && Objects.equals(endCreditDate, that.endCreditDate) && Objects.equals(percent, that.percent) && Objects.equals(creditState, that.creditState) && Objects.equals(isAccepted, that.isAccepted);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bankName, loanAmount, creditType, paymentPerMonth, startCreditDate, endCreditDate, percent, creditState, isAccepted);
     }
 }
