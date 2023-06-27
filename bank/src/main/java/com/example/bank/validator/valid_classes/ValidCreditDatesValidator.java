@@ -8,13 +8,30 @@ import jakarta.validation.ConstraintValidatorContext;
 
 import java.time.LocalDate;
 
+/**
+ * The `ValidCreditDatesValidator` class is a validator that checks if the credit dates provided in the `CreditRequest`
+ * are valid, ensuring that the start date is before the end date.
+ * It implements the `ConstraintValidator` interface for validating objects annotated with the `ValidCreditDates` annotation.
+ */
 public class ValidCreditDatesValidator implements ConstraintValidator<ValidCreditDates, Object> {
 
+    /**
+     * Initializes the validator.
+     *
+     * @param constraintAnnotation The `ValidCreditDates` annotation instance.
+     */
     @Override
     public void initialize(ValidCreditDates constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
+    /**
+     * Validates the credit object to ensure that the credit dates are valid.
+     *
+     * @param credit  The credit object to be validated.
+     * @param context The validation context.
+     * @return `true` if the credit dates are valid (start date is before the end date), `false` otherwise.
+     */
     @Override
     public boolean isValid(Object credit, ConstraintValidatorContext context) {
         LocalDate today = LocalDate.now();
@@ -25,11 +42,6 @@ public class ValidCreditDatesValidator implements ConstraintValidator<ValidCredi
             return startCreditDate.isBefore(endCreditDate);
         }
 
-        //        else if (passport instanceof CreditUpdateRequest creditUpdateRequest) {
-//            LocalDate startCreditDate = LocalDate.parse(passportUpdateRequest.givenDate());
-//            LocalDate endCreditDate = LocalDate.parse(passportUpdateRequest.expireDate());
-//            return !givenDate.isAfter(today) && expireDate.isAfter(today);
-//        }
 
         return false;
     }

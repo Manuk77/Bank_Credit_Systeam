@@ -13,13 +13,10 @@ import com.example.bank.service.RequestService;
 import com.itextpdf.text.DocumentException;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
-import org.hibernate.sql.ast.tree.expression.Collation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -28,6 +25,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+/**
+
+ Controller class that handles HTTP requests related to customer requests.
+
+ It maps the requests to appropriate methods and handles the corresponding logic.
+
+ This class is responsible for managing customer requests and interacting with the RequestService, BankController,
+
+ and EmailService components.
+ */
 @RestController
 @RequestMapping("/request")
 public class RequestController {
@@ -37,6 +44,13 @@ public class RequestController {
 
     private final EmailService emailService;
 
+    /**
+
+     Constructs a new RequestController with the provided dependencies.
+     @param requestService The RequestService component responsible for managing customer requests.
+     @param bankController The BankController component responsible for handling bank-related operations.
+     @param emailService The EmailService component responsible for sending email notifications.
+     */
     @Autowired
     public RequestController(RequestService requestService, BankController bankController, EmailService emailService) {
         this.requestService = requestService;
@@ -45,11 +59,14 @@ public class RequestController {
     }
 
     /**
+     * Retrieves customer information based on the provided filtered customer request.
+     * Performs a POST request to an external service and calculates risks for the customer.
+     * Based on the calculated risks, the customer information is either saved as rejected customers,
+     * sent email notifications, or saved as accepted customers.
      *
-     * @param customerRequestFiltered
-     * @return
+     * @param customerRequestFiltered The filtered customer request containing the necessary information for retrieving customer data and calculating risks.
+     * @return A list of CustomerResponse objects representing the saved or accepted customer information.
      */
-
     @PostMapping("/risk")
     public @ResponseBody List<CustomerResponse> getInfo(@Valid @RequestBody final CustomerRequestFiltered customerRequestFiltered) {
         final String creditTime = customerRequestFiltered.creditRequest().creditTime();
@@ -91,10 +108,14 @@ public class RequestController {
         return customerRequests.stream().map(CustomerResponse::getFromRequest).toList();
     }
 
+
     /**
+     * Posts the accepted customer requests to the specified URL.
+     * The customer request is saved as accepted customers by invoking the 'saveInfoAcceptedCustomers' method,
+     * and then it is sent as a POST request to the specified URL.
      *
-     * @param customerRequest
-     * @return
+     * @param customerRequest The customer request object to be posted as accepted customers.
+     * @return True if the POST request was successful and received a response indicating success, false otherwise.
      */
 
     private boolean postAcceptedRequests(final CustomerRequest customerRequest) {
@@ -108,6 +129,14 @@ public class RequestController {
         return Boolean.TRUE.equals(response.getBody());
     }
 
+    /**
+
+     Posts the not accepted customer requests to the specified URL.
+     The customer request is saved as accepted customers by invoking the 'saveInfoAcceptedCustomers' method,
+     and then it is sent as a POST request to the specified URL.
+     @param customerRequest The customer request object to be posted as not accepted customers.
+     @return True if the POST request was successful and received a response indicating success, false otherwise.
+     */
     private boolean postNotAcceptedRequests(final CustomerRequest customerRequest) {
         bankController.saveInfoAcceptedCustomers(customerRequest);
         final String urlRejected = "http://localhost:8080/Customer/saveCustomer"; // url of postMethod where is going to be passed CustomerRequest
@@ -120,10 +149,14 @@ public class RequestController {
     }
 
     /**
-     *
-     * @param customerRequestFiltered
-     * @return
+
+     Creates a CustomerModel object based on the provided CustomerRequestFiltered.
+     The method extracts the necessary data from the customerRequestFiltered parameter
+     to create a new CustomerModel object.
+     @param customerRequestFiltered The filtered customer request containing the necessary information.
+     @return The created CustomerModel object.
      */
+
     private CustomerModel getFromCustomerRequestFiltered(final CustomerRequestFiltered customerRequestFiltered) {
         List<CreditModel> creditModels = new ArrayList<>();
         creditModels.add(new CreditModel(
