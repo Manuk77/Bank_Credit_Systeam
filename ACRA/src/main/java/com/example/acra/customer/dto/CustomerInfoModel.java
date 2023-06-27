@@ -10,7 +10,7 @@ public class CustomerInfoModel {
     private  String firstName;
     private  String lastName;
     private  String birthDate;
-    private  Byte age;
+    private  Integer age;
     private  String phone;
     private  String email;
     private Boolean flag;
@@ -21,7 +21,7 @@ public class CustomerInfoModel {
         this.firstName = customerInfoRequest.firstName();
         this.lastName = customerInfoRequest.lastName();
         this.birthDate = customerInfoRequest.birthDate();
-        this.age = Byte.valueOf(customerInfoRequest.age());
+        this.age = Integer.parseInt(customerInfoRequest.age());
         this.phone = customerInfoRequest.phone();
         this.email = customerInfoRequest.email();
     }
@@ -61,11 +61,11 @@ public class CustomerInfoModel {
         this.birthDate = birthDate;
     }
 
-    public Byte getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(Byte age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 
