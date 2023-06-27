@@ -13,16 +13,30 @@ import com.example.bank.customer.response.CustomerResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The FilterCustomerInfo class is responsible for filtering and processing customer information
+ * based on certain criteria and business rules.
+ */
 public class FilterCustomerInfo {
 
     private static CustomerModelFiltered customerModelFiltered;
     private static CustomerHistoryModel customerHistoryModel;
 
+    /**
+     * Constructs a new instance of the FilterCustomerInfo class with the specified filtered customer model.
+     *
+     * @param customerModelFiltered The filtered customer model to be processed.
+     */
 
     public FilterCustomerInfo(final CustomerModelFiltered customerModelFiltered) {
         FilterCustomerInfo.customerModelFiltered = customerModelFiltered;
     }
 
+    /**
+     * Filters the customer model and calculates the ranking score based on the provided criteria.
+     *
+     * @return A ModelOfRanking object representing the filtered and ranked customer model.
+     */
 
     public static ModelOfRanking filterCustomerModel() {
 
@@ -35,35 +49,23 @@ public class FilterCustomerInfo {
 
     }
 
+    /**
+     * Filters the customer model and returns the original model if the filtering is not required.
+     *
+     * @return A ModelOfRanking object representing the customer model without any filtering applied.
+     */
     public static  ModelOfRanking filterCustomerModelOrElse() {
         return new ModelOfRanking(customerModelFiltered);
     }
 
-    /**
-     * this method changes customer credit score to the enum types
-     * @param creditScore is customers credit score which can be 5 types(POOR, FAIR, GOOD, VERY_GOOD, EXCEPTIONAL)
-     * @return creditHistoryType
-     */
-    private static CreditHistoryType getCreditHistoryType(final String creditScore) {
-        int score = Integer.parseInt(creditScore);
-        if (score > 299 && score < 580)
-            return CreditHistoryType.POOR;
-        if (score > 579 && score < 670)
-            return CreditHistoryType.FAIR;
-        if (score > 669 && score < 740)
-            return CreditHistoryType.GOOD;
-        if (score > 739 && score < 800)
-            return CreditHistoryType.VERY_GOOD;
-        if (score > 799 && score < 851)
-            return CreditHistoryType.EXCEPTIONAL;
-        return CreditHistoryType.POOR;
-    }
+
 
     /**
-     * this method calculates how much money will stay from salary for new credit
-     * @param creditModels credit's list from credit history
-     * @param salary of the customer
-     * @return different of the (salary -= all credits paymentPerMonth)
+     * Calculates the remaining income of the customer after deducting the monthly payments of all credits.
+     *
+     * @param creditModels The list of credits from the customer's credit history.
+     * @param salary       The salary of the customer.
+     * @return The remaining income of the customer after deducting the credit payments.
      */
     private static Integer customerIncome(final List<CreditModel> creditModels, final Integer salary) {
 
@@ -77,12 +79,21 @@ public class FilterCustomerInfo {
     }
 
 
+    /**
+     * Sets the customer request in the FilterCustomerInfo class.
+     *
+     * @param customerModelFiltered The filtered customer model to be set as the customer request.
+     */
 
-
-    public void setCustomerRequest(CustomerModelFiltered customerModelFiltered) {
+    public void setCustomerRequest(final CustomerModelFiltered customerModelFiltered) {
         FilterCustomerInfo.customerModelFiltered = customerModelFiltered;
     }
 
+    /**
+     * Sets the customer history model in the FilterCustomerInfo class.
+     *
+     * @param customerHistoryModel The customer history model to be set.
+     */
 
     public static void setCustomerHistoryModel(final CustomerHistoryModel customerHistoryModel) {
         FilterCustomerInfo.customerHistoryModel = customerHistoryModel;

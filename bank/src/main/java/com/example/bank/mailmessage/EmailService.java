@@ -16,6 +16,10 @@ import jakarta.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * The `EmailService` class is a service class responsible for sending emails to customers.
+ * It utilizes the `PdfGenerator` and `JavaMailSender` components for generating PDF documents and sending emails, respectively.
+ */
 @Service
 @EnableAutoConfiguration
 public class EmailService {
@@ -23,12 +27,27 @@ public class EmailService {
     private final PdfGenerator pdfGenerator;
     private final JavaMailSender javaMailSender;
 
+    /**
+     * Constructs an `EmailService` with the specified `PdfGenerator` and `JavaMailSender`.
+     *
+     * @param pdfGenerator     The `PdfGenerator` component used for generating PDF documents.
+     * @param javaMailSender   The `JavaMailSender` component used for sending emails.
+     */
     @Autowired
     public EmailService(PdfGenerator pdfGenerator, JavaMailSender javaMailSender) {
         this.pdfGenerator = pdfGenerator;
         this.javaMailSender = javaMailSender;
     }
 
+    /**
+     * Sends an email to the specified customer with the provided content and customer model.
+     *
+     * @param content       The content of the email.
+     * @param customerModel The customer model containing customer information.
+     * @throws MessagingException If an error occurs during email composition or sending.
+     * @throws DocumentException If an error occurs during PDF document generation.
+     * @throws IOException       If an I/O error occurs.
+     */
     public void sendEmailCustomers(String content,CustomerModel customerModel)
             throws MessagingException, DocumentException, IOException {
 

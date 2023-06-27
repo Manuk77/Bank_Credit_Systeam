@@ -1,5 +1,10 @@
 package com.example.bank.bank_model.risk_calculating;
 
+/**
+
+ Enum representing different types of credit history based on credit scores.
+ Each credit history type is associated with a specific credit score range.
+ */
 public enum CreditHistoryType {
     POOR, // score [300 , 579]
     FAIR, // score [580, 669]

@@ -3,20 +3,39 @@ package com.example.bank.bank_model.risk_calculating;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * The `RiskCalculating` class is responsible for performing risk calculations based on a `RankedModel` and credit time.
+ * It uses logistic regression to calculate the risk probability for customers and determines if the risk exceeds the threshold set by the bank.
+ */
 public class RiskCalculating {
     private RankedModel rankedModel;
     private String creditTime;
-    public List<Double> PD = new ArrayList<>(); // դեֆոլտի հավանականությունը
+    public List<Double> PD = new ArrayList<>(); // Probability of Default (PD) values
     public static List<String> creditTimes = new ArrayList<>();
 
+    /**
+     * Constructs a new empty `RiskCalculating` object.
+     */
+    public RiskCalculating() {
+    }
+
+    /**
+     * Constructs a new `RiskCalculating` object with the specified `RankedModel`.
+     *
+     * @param rankedModel The `RankedModel` containing the rankings for different risk factors.
+     */
     public RiskCalculating(final RankedModel rankedModel) {
         this.rankedModel = rankedModel;
     }
 
-    public RiskCalculating() {
-    }
-
-    public void setRankedModels(final RankedModel rankedModel, String creditTime) {
+    /**
+     * Sets the `RankedModel` and credit time for risk calculations.
+     *
+     * @param rankedModel The `RankedModel` containing the rankings for different risk factors.
+     * @param creditTime  The credit time for risk calculations.
+     */
+    public void setRankedModels(final RankedModel rankedModel, final String creditTime) {
         this.rankedModel = rankedModel;
         this.creditTime = creditTime;
     }
@@ -36,9 +55,9 @@ public class RiskCalculating {
 
 
     /**
-     * calculating of y
+     * Calculates the risk using logistic regression.
      *
-     * @return List
+     * @return `true` if the risk exceeds the threshold, `false` otherwise.
      */
     private Boolean riskCounting() {
 
@@ -73,17 +92,22 @@ public class RiskCalculating {
 
     }
 
-
+    /**
+     * Determines if the calculated risk exceeds the threshold.
+     *
+     * @param y The calculated risk value.
+     * @return `true` if the risk exceeds the threshold, `false` otherwise.
+     */
     private Boolean booleanListOfCustomers(final Double y) {
          return logisticModel(y);
     }
 
     /**
-     * this logistic method calculates y with this function
+     * Calculates the risk using the logistic model.
      *
-     * @param y is double 1 > number
-     * @return true if (1 / (1 + Math.pow(Math.E, y)))  <  DPt, else false
-     * DPt is probability of default set by the bank
+     * @param y The calculated risk value.
+     * @return `true` if the calculated risk is greater than the threshold (DPt), `false` otherwise.
+     *         DPt is the probability of default set by the bank.
      */
     private boolean logisticModel(final Double y) {
         final double DPt = 0.59;
