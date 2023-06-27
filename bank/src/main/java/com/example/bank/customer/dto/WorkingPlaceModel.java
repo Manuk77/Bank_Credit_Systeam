@@ -5,6 +5,8 @@ import com.example.bank.customer.creating_requests.requests.WorkingPlaceRequest;
 import com.example.bank.customer.entity.WorkingPlaceEntity;
 import com.example.bank.customer.response.WorkingPlaceResponse;
 
+import java.util.Objects;
+
 
 public class WorkingPlaceModel {
     private String name;
@@ -46,5 +48,18 @@ public class WorkingPlaceModel {
                 "name='" + name + '\'' +
                 ", salary='" + salary + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WorkingPlaceModel that = (WorkingPlaceModel) o;
+        return Objects.equals(name, that.name) && Objects.equals(salary, that.salary);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, salary);
     }
 }

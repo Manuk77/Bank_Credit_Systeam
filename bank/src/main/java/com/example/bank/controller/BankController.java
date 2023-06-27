@@ -36,34 +36,6 @@ public class BankController {
 
 
     /**
-     * Retrieves customer information based on the provided passport number.
-     * Performs a GET request to the external service and saves the retrieved customer information
-     * to the local database if it is present.
-     *
-     * @param passportNumber The passport number of the customer.
-     * @return The response containing the customer information if it was successfully saved, or null otherwise.
-     */
-    @PostMapping(value = "/getInfo/{passportNumber}")
-    public @ResponseBody CustomerResponse newCredit(@NonNull @PathVariable final String passportNumber) {
-
-        final String path = "http://localhost:8080/Customer/getInfo/" + passportNumber;
-        RestTemplate restTemplate = new RestTemplate();
-        Optional<CustomerResponse> customerR = Optional.ofNullable(
-                restTemplate.getForObject(path, CustomerResponse.class));
-
-        if (customerR.filter(response -> bankService.saveCustomer(
-                new AddressModel(response.addressResponse()),
-                new PassportModel(response.passportResponse()),
-                new CustomerInfoModel(response.customerInfoResponse()),
-                new CustomerHistoryModel(response.customerHistoryResponse()),
-                new WorkingPlaceModel(response.workingPlaceResponse()))).isPresent()) {
-            return customerR.get();
-        }
-        return null;
-
-    }
-
-    /**
      * Retrieves the customer information based on the provided passport number.
      *
      * @param passportNumber The passport number of the customer.
@@ -81,30 +53,17 @@ public class BankController {
      * @param customerRequest The request object containing the customer information to be saved.
      * @return The response containing the saved customer information if the save operation was successful, or null otherwise.
      */
-    @PostMapping(value = "save/rejected/customers")
-    public @ResponseBody CustomerResponse saveInfoRejectedCustomers(@RequestBody @Valid final CustomerRequest customerRequest){
+    @PostMapping(value = "saveOrUpdateRejectedCustomers")
+    public @ResponseBody CustomerResponse saveOrUpdateRejectedCustomers(@Valid @RequestBody final CustomerRequest customerRequest){
         // RestTemplate if it rejected
-       if (bankService.saveCustomer(new AddressModel(customerRequest.addressRequest()),
-                new PassportModel(customerRequest.passportRequest()),
-                new CustomerInfoModel(customerRequest.customerInfoRequest()),
-                new CustomerHistoryModel(customerRequest.customerHistoryRequest()),
-                new WorkingPlaceModel(customerRequest.workingPlaceRequest())))
-           return CustomerResponse.getFromRequest(customerRequest);
+           if (bankService.saveCustomer(
+                   new AddressModel(customerRequest.addressRequest()),
+                   new PassportModel(customerRequest.passportRequest()),
+                   new CustomerInfoModel(customerRequest.customerInfoRequest()),
+                   new CustomerHistoryModel(customerRequest.customerHistoryRequest()),
+                   new WorkingPlaceModel(customerRequest.workingPlaceRequest())))
+               return CustomerResponse.getFromRequest(customerRequest);
        return null;
-    }
-
-    /**
-     * Adds a new credit for a customer with the specified passport number.
-     *
-     * @param creditRequest   The request object containing the details of the new credit to be added.
-     * @param passportNumber  The passport number of the customer.
-     * @return True if the new credit was successfully added, false otherwise.
-     */
-    @PatchMapping(value = "addNewCredit/{passportNumber}")
-    public boolean addNewCredit(@NonNull @RequestBody CreditRequest creditRequest,
-                                @NonNull @PathVariable final String passportNumber) {
-
-        return bankService.addNewCredit(new CreditModel(creditRequest), passportNumber);
     }
 
     /**
@@ -114,8 +73,8 @@ public class BankController {
      * @param customerRequest The request object containing the customer information to be saved.
      * @return The response containing the saved customer information if the save operation was successful, or null otherwise.
      */
-    @PostMapping(value = "save/accepted/customers")
-    public @ResponseBody CustomerResponse saveInfoAcceptedCustomers(@Valid @RequestBody final CustomerRequest customerRequest) {
+    @PostMapping(value = "saveOrUpdateAcceptedCustomers")
+    public @ResponseBody CustomerResponse saveOrUpdateAcceptedCustomers(@Valid @RequestBody final CustomerRequest customerRequest) {
         // RestTemplate getFrom ACRA
 
         if (bankService.saveCustomer(new AddressModel(customerRequest.addressRequest()),
@@ -128,6 +87,8 @@ public class BankController {
 
         return null;
     }
+
+
 
 
 }

@@ -1,6 +1,7 @@
 package com.example.bank.controller;
 
 import com.example.bank.bank_model.portfolio.Portfolio;
+import com.example.bank.custome_exceptions.DuplicateCustomerRequestException;
 import com.example.bank.customer.bank.Banks;
 import com.example.bank.customer.bank.CreditType;
 import com.example.bank.customer.creating_requests.requests.CustomerRequest;
@@ -21,7 +22,6 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,10 +74,16 @@ public class RequestController {
         final String path = "http://localhost:8080/Customer/getInfo/" + customerRequestFiltered.passportRequest().passportNumber();
         RestTemplate rt = new RestTemplate();
         Optional<CustomerResponse> customerOp = Optional.ofNullable(rt.getForObject(path, CustomerResponse.class));
-        List<CustomerModel> customerModels = requestService.calculateRisks(customerModel, customerOp, creditTime);
+        List<CustomerModel> customerModels;
+        try {
+           customerModels = requestService.calculateRisks(customerModel, customerOp, creditTime);
+        }catch (DuplicateCustomerRequestException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
 
         if (customerModels == null) {
-            bankController.saveInfoRejectedCustomers(CustomerRequest.getFromModel(customerModel));
+            bankController.saveOrUpdateRejectedCustomers(CustomerRequest.getFromModel(customerModel));
             try {
                 emailService.sendEmailCustomers("merjvel e",customerModel);
             } catch (MessagingException | DocumentException | IOException e) {
@@ -119,8 +125,8 @@ public class RequestController {
      */
 
     private boolean postAcceptedRequests(final CustomerRequest customerRequest) {
-        bankController.saveInfoAcceptedCustomers(customerRequest);
-        final String urlRejected = "http://localhost:8080/Customer/saveCustomer"; // url of postMethod where is going to be passed CustomerRequest
+        bankController.saveOrUpdateRejectedCustomers(customerRequest);
+        final String urlRejected = "http://localhost:8080/Customer/saveCustomerOrUpdateCredit"; // url of postMethod where is going to be passed CustomerRequest
         RestTemplate postRequest = new RestTemplate();
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -138,8 +144,8 @@ public class RequestController {
      @return True if the POST request was successful and received a response indicating success, false otherwise.
      */
     private boolean postNotAcceptedRequests(final CustomerRequest customerRequest) {
-        bankController.saveInfoAcceptedCustomers(customerRequest);
-        final String urlRejected = "http://localhost:8080/Customer/saveCustomer"; // url of postMethod where is going to be passed CustomerRequest
+        bankController.saveOrUpdateAcceptedCustomers(customerRequest);
+        final String urlRejected = "http://localhost:8080/Customer/saveCustomerOrUpdateCredit"; // url of postMethod where is going to be passed CustomerRequest
         RestTemplate postRequest = new RestTemplate();
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);

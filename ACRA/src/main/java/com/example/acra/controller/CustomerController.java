@@ -2,7 +2,6 @@ package com.example.acra.controller;
 
 
 import com.example.acra.customer.dto.*;
-import com.example.acra.customer.requests.creating_requests.CreditRequest;
 import com.example.acra.customer.requests.creating_requests.CustomerRequest;
 import com.example.acra.customer.response.CustomerResponse;
 import com.example.acra.service.CustomerService;
@@ -38,9 +37,9 @@ public class CustomerController {
      * @param customerRequest The customer request object containing the customer details to be saved.
      * @return `true` if the customer information is successfully saved, `false` otherwise.
      */
-    @PostMapping(value = "/saveCustomer")
-    public Boolean saveInfo(@Valid @RequestBody final CustomerRequest customerRequest) {
-        return customerService.saveCustomer(
+    @PostMapping(value = "/saveCustomerOrUpdateCredit")
+    public Boolean saveCustomerOrUpdateCredit(@Valid @RequestBody final CustomerRequest customerRequest) {
+        return customerService.saveNewCustomerOrUpdateCredit(
                 new AddressModel(customerRequest.addressRequest()),
                 new PassportModel(customerRequest.passportRequest()),
                 new CustomerInfoModel(customerRequest.customerInfoRequest()),
@@ -48,20 +47,6 @@ public class CustomerController {
                 new WorkingPlaceModel(customerRequest.workingPlaceRequest()));
     }
 
-
-    /**
-     * Adds a new credit to the customer with the specified passport number.
-     *
-     * @param creditRequest   The credit request object containing the details of the new credit.
-     * @param passportNumber  The passport number of the customer.
-     * @return `true` if the new credit is successfully added, `false` otherwise.
-     */
-    @PatchMapping(value = "/addNewCredit/{passportNumber}")
-    public Boolean addNewCredit(@RequestBody  final CreditRequest creditRequest,
-                                @NonNull @PathVariable final  String passportNumber) {
-
-        return customerService.addNewCredit(new CreditModel(creditRequest), passportNumber);
-    }
 
     /**
      * Retrieves the customer information for the customer with the specified passport number.

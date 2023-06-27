@@ -20,7 +20,7 @@ public class CustomerEntity {
     @Temporal(TemporalType.DATE)
     private Date birthDate;
     @Column(name = "age",nullable = false)
-    private Byte age;
+    private Integer age;
     @Column(name = "phone", nullable = false, length = 32)
     private String phone;
     @Column(name = "email", nullable = false, length = 32)
@@ -90,11 +90,11 @@ public class CustomerEntity {
         this.birthDate = birthDate;
     }
 
-    public Byte getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(final Byte age) {
+    public void setAge(final Integer age) {
         this.age = age;
     }
 

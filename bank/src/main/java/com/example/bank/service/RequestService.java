@@ -4,6 +4,7 @@ import com.example.bank.bank_model.portfolio.CustomerWithMathModelFields;
 import com.example.bank.bank_model.portfolio.Portfolio;
 import com.example.bank.bank_model.risk_calculating.CreditHistoryType;
 import com.example.bank.bank_model.risk_calculating.RiskCalculating;
+import com.example.bank.custome_exceptions.DuplicateCustomerRequestException;
 import com.example.bank.customer.dto.CustomerModel;
 import com.example.bank.customer.dto.CustomerModelFiltered;
 import com.example.bank.customer.response.CustomerResponse;
@@ -60,6 +61,12 @@ public class RequestService {
  @return A list of CustomerModel objects if risks are calculated successfully and meet the conditions, or null otherwise
  */
     public List<CustomerModel> calculateRisks(final CustomerModel customerModel, final Optional<CustomerResponse> customerOp, final String creditTime) {
+        if (!customerModels.isEmpty())
+           for (final CustomerModel cm: customerModels) {
+               if (cm.equals(customerModel))
+                   throw new DuplicateCustomerRequestException("Duplicate Customer Request ");
+           }
+
         if (customerOp.map(customerResponse -> getAnswer(customerModel, customerResponse, creditTime))
                 .orElseGet(() -> getAnswerElse(customerModel, creditTime))) {
             countOfRequests++;
@@ -162,7 +169,10 @@ public class RequestService {
      Pi is calculated as PD[i] * ((1 - LGD) + (1 - PD[i])) / (1 + Rf) * LoanAmount,
      where LoanAmount is obtained from the latest credit model of the corresponding customer.
      Ri is calculated as (LoanAmount / Pi[i]) - 1.
-     Wi is calculated as LoanAmount / capitalOfBank, where capitalOfBank is a constant.
+     Wi is calculated as LocustomerModels.forEach(customerModel1 -> {
+              if (customerModel1.equals(customerModel))
+
+          }) ;anAmount / capitalOfBank, where capitalOfBank is a constant.
      Sigma is calculated using the PD, LGD, and Rf values according to the specified formula.
      Creates a new CustomerWithMathModelFields object for each customer and adds it to the customersFields list.
      @param PD The list of Probability of Default (PD) values for each customer.

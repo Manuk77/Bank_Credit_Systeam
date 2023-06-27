@@ -49,10 +49,10 @@ public record CustomerInfoRequest(
 
         @NotNullEmptyBlankString
         @Pattern(
-                regexp = "^\\+374\\s\\d{2}-\\d{3}-\\d{3}$",
+                regexp = "^\\+374\\s\\d{2}-\\d{2}-\\d{2}-\\d{2}$",
                 message = """
                         The phone number must be like these:\s
-                       +374 11-111-111"""
+                       +374 11-11-11-11"""
         )
         @JsonProperty("phone")
         String phone,
@@ -70,8 +70,8 @@ public record CustomerInfoRequest(
                 return new CustomerInfoRequest(
                         customerInfoResponse.firstName(),
                         customerInfoResponse.lastName(),
-                        customerInfoResponse.birthDate(),
                         customerInfoResponse.age(),
+                        customerInfoResponse.birthDate(),
                         customerInfoResponse.phone(),
                         customerInfoResponse.email());
         }
@@ -80,8 +80,8 @@ public record CustomerInfoRequest(
                 return new CustomerInfoRequest(
                         customerInfoModel.getFirstName(),
                         customerInfoModel.getLastName(),
-                        customerInfoModel.getBirthDate(),
                         customerInfoModel.getAge().toString(),
+                        customerInfoModel.getBirthDate(),
                         customerInfoModel.getPhone(),
                         customerInfoModel.getEmail()
                 );

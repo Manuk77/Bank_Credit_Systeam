@@ -4,6 +4,7 @@ import com.example.bank.customer.entity.CustomerEntity;
 import com.example.bank.customer.response.CustomerResponse;
 
 import java.util.List;
+import java.util.Objects;
 
 
 public class CustomerModel {
@@ -94,5 +95,18 @@ public class CustomerModel {
                 ", workingPlaceModel=" + workingPlaceModel + "\n" +
                 ", customerHistoryModel=" + customerHistoryModel + "\n" +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CustomerModel that = (CustomerModel) o;
+        return Objects.equals(addressModel, that.addressModel) && Objects.equals(passportModel, that.passportModel) && Objects.equals(customerInfoModel, that.customerInfoModel) && Objects.equals(workingPlaceModel, that.workingPlaceModel) && Objects.equals(customerHistoryModel, that.customerHistoryModel);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(addressModel, passportModel, customerInfoModel, workingPlaceModel, customerHistoryModel);
     }
 }

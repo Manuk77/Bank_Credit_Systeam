@@ -5,6 +5,8 @@ import com.example.bank.customer.entity.CustomerEntity;
 import com.example.bank.customer.creating_requests.requests.CustomerInfoRequest;
 import com.example.bank.customer.response.CustomerInfoResponse;
 
+import java.util.Objects;
+
 public class CustomerInfoModel {
 
 
@@ -12,7 +14,7 @@ public class CustomerInfoModel {
     private  String firstName;
     private  String lastName;
     private  String birthDate;
-    private  Byte age;
+    private  Integer age;
     private  String phone;
     private  String email;
     private Boolean flag;
@@ -23,7 +25,7 @@ public class CustomerInfoModel {
         this.firstName = customerInfoRequest.firstName();
         this.lastName = customerInfoRequest.lastName();
         this.birthDate = customerInfoRequest.birthDate();
-        this.age = Byte.valueOf(customerInfoRequest.age());
+        this.age = Integer.parseInt(customerInfoRequest.age());
         this.phone = customerInfoRequest.phone();
         this.email = customerInfoRequest.email();
     }
@@ -43,7 +45,7 @@ public class CustomerInfoModel {
         this.firstName = customerInfoResponse.firstName();
         this.lastName = customerInfoResponse.lastName();
         this.birthDate = customerInfoResponse.birthDate();
-        this.age = Byte.valueOf(customerInfoResponse.age());
+        this.age = Integer.parseInt(customerInfoResponse.age());
         this.phone = customerInfoResponse.phone();
         this.email = customerInfoResponse.email();
     }
@@ -72,11 +74,11 @@ public class CustomerInfoModel {
         this.birthDate = birthDate;
     }
 
-    public Byte getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(Byte age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 
@@ -116,5 +118,18 @@ public class CustomerInfoModel {
                 ", email='" + email + '\'' +
                 ", flag=" + flag +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CustomerInfoModel that = (CustomerInfoModel) o;
+        return Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(birthDate, that.birthDate) && Objects.equals(age, that.age) && Objects.equals(phone, that.phone) && Objects.equals(email, that.email) && Objects.equals(flag, that.flag);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, birthDate, age, phone, email, flag);
     }
 }

@@ -4,6 +4,8 @@ import com.example.bank.customer.creating_requests.requests.AddressRequest;
 import com.example.bank.customer.entity.AddressEntity;
 import com.example.bank.customer.response.AddressResponse;
 
+import java.util.Objects;
+
 
 public class AddressModel {
     private String country;
@@ -59,5 +61,18 @@ public class AddressModel {
                 ", city='" + city + '\'' +
                 ", street='" + street + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AddressModel that = (AddressModel) o;
+        return Objects.equals(country, that.country) && Objects.equals(city, that.city) && Objects.equals(street, that.street);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(country, city, street);
     }
 }

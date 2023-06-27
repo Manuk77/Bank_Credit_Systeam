@@ -44,14 +44,10 @@ public record CustomerInfoRequest(
 
         @NotNullEmptyBlankString
         @Pattern(
-                regexp = "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$",
+                regexp = "^\\+374\\s\\d{2}-\\d{2}-\\d{2}-\\d{2}$",
                 message = """
                         The phone number must be like these:\s
-                        123-456-7890
-                        (123) 456-7890
-                        123 456 7890
-                        123.456.7890
-                        +91 (123) 456-7890"""
+                       +374 11-11-11-11"""
         )
         @JsonProperty("phone")
         String phone,

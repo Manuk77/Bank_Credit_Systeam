@@ -17,7 +17,7 @@ public class PassportEntity {
     private String firstName;
     @Column(name = "last_name", nullable = false, length = 50)
     private String lastName;
-    @Column(name = "date_birthday", nullable = true)
+    @Column(name = "date_birthday", nullable = false)
     // @Temporal(TemporalType.DATE)
     private Date birthDate;
     @Column(name = "issue", nullable = false)

@@ -73,14 +73,14 @@ public class BankService {
     }
 
     /**
-     * Saves customer information by creating and persisting corresponding entities.
+     * Saves customer information by creating a new customer record or updating an existing customer's credit.
      *
-     * @param addressModel     The model object containing the address information of the customer.
-     * @param passportModel    The model object containing the passport information of the customer.
-     * @param customerInfoModel The model object containing general information about the customer.
-     * @param customerHistory  The model object containing the historical information of the customer.
-     * @param workingPlaceModel The model object containing the working place information of the customer.
-     * @return true if the customer information is successfully saved, false otherwise.
+     * @param addressModel      The address model containing the customer's address information.
+     * @param passportModel     The passport model containing the customer's passport information.
+     * @param customerInfoModel The customer info model containing the customer's general information.
+     * @param customerHistory   The customer history model containing the customer's history information.
+     * @param workingPlaceModel The working place model containing the customer's working place information.
+     * @return {@code true} if the customer information is successfully saved or updated, {@code false} otherwise.
      */
     public boolean saveCustomer(final AddressModel addressModel,
                                 final PassportModel passportModel,
@@ -88,27 +88,40 @@ public class BankService {
                                 final CustomerHistoryModel customerHistory,
                                 final WorkingPlaceModel workingPlaceModel) {
 
-        return saveAllEntities(new AddressEntity(addressModel), new PassportEntity(passportModel ),
-                new WorkingPlaceEntity(workingPlaceModel), new CustomerHistoryEntity(customerHistory),
-                customerInfoModel, mapToCreditEntity(customerHistory.getCreditModels()));
+        Optional<CustomerEntity> customerEntity = getCustomer(passportModel.getPassportNumber());
+        if (!customerEntity.isPresent())
+            return saveAllEntities(new AddressEntity(addressModel), new PassportEntity(passportModel ),
+                    new WorkingPlaceEntity(workingPlaceModel), new CustomerHistoryEntity(customerHistory),
+                    customerInfoModel, mapToCreditEntity(customerHistory.getCreditModels()));
+
+        if (customerEntity.get().getCustomerHistory().getCredits().size() == customerHistory.getCreditModels().size())
+            return false;
+        return addNewCredit(customerHistory.getCreditModels().get(customerHistory.getCreditModels().size() - 1), customerEntity);
     }
 
     /**
      * Adds a new credit for a customer identified by the provided passport number.
      *
      * @param creditModel    The model object containing the details of the new credit.
-     * @param passportNumber The passport number of the customer.
+     * @param customerEntity The passport number of the customer.
      * @return true if the credit is successfully added for the customer, false otherwise.
      */
-    public boolean addNewCredit(final CreditModel creditModel, final String passportNumber) {
-        Optional<CustomerEntity> customerOp = customerRepository.findCustomerEntityByPassport_PassportNumber(passportNumber);
-        if (!customerOp.isPresent())
-            return false;
+    public boolean addNewCredit(final CreditModel creditModel, final Optional<CustomerEntity> customerEntity) {
         CreditEntity creditEntity = new CreditEntity(creditModel);
-        creditEntity.setCustomerHistoryEntity(customerOp.get().getCustomerHistory());
+        creditEntity.setCustomerHistoryEntity(customerEntity.get().getCustomerHistory());
         creditRepository.save(creditEntity);
         return true;
 
+    }
+
+    /**
+     * Retrieves a customer entity from the customer repository based on the provided passport number.
+     *
+     * @param passportNumber The passport number of the customer.
+     * @return An optional containing the customer entity if found, or an empty optional otherwise.
+     */
+    private Optional<CustomerEntity> getCustomer(final String passportNumber) {
+        return customerRepository.findCustomerEntityByPassport_PassportNumber(passportNumber);
     }
 
 
