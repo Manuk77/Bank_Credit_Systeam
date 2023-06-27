@@ -1,24 +1,24 @@
 package com.example.bank.custome_exceptions;
 
-public class DuplicateCustomerRequest extends RuntimeException {
+public class DuplicateCustomerRequestException extends RuntimeException {
 
-    public DuplicateCustomerRequest() {
+    public DuplicateCustomerRequestException() {
         super();
     }
 
-    public DuplicateCustomerRequest(final String message) {
+    public DuplicateCustomerRequestException(final String message) {
         super(message);
     }
 
-    public DuplicateCustomerRequest(String message, Throwable cause) {
+    public DuplicateCustomerRequestException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public DuplicateCustomerRequest(Throwable cause) {
+    public DuplicateCustomerRequestException(Throwable cause) {
         super(cause);
     }
 
-    public DuplicateCustomerRequest(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public DuplicateCustomerRequestException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

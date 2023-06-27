@@ -4,7 +4,7 @@ import com.example.bank.bank_model.portfolio.CustomerWithMathModelFields;
 import com.example.bank.bank_model.portfolio.Portfolio;
 import com.example.bank.bank_model.risk_calculating.CreditHistoryType;
 import com.example.bank.bank_model.risk_calculating.RiskCalculating;
-import com.example.bank.custome_exceptions.DuplicateCustomerRequest;
+import com.example.bank.custome_exceptions.DuplicateCustomerRequestException;
 import com.example.bank.customer.dto.CustomerModel;
 import com.example.bank.customer.dto.CustomerModelFiltered;
 import com.example.bank.customer.response.CustomerResponse;
@@ -64,7 +64,7 @@ public class RequestService {
         if (!customerModels.isEmpty())
            for (final CustomerModel cm: customerModels) {
                if (cm.equals(customerModel))
-                   throw new DuplicateCustomerRequest("Duplicate Customer Request ");
+                   throw new DuplicateCustomerRequestException("Duplicate Customer Request ");
            }
 
         if (customerOp.map(customerResponse -> getAnswer(customerModel, customerResponse, creditTime))

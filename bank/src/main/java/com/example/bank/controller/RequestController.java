@@ -1,7 +1,7 @@
 package com.example.bank.controller;
 
 import com.example.bank.bank_model.portfolio.Portfolio;
-import com.example.bank.custome_exceptions.DuplicateCustomerRequest;
+import com.example.bank.custome_exceptions.DuplicateCustomerRequestException;
 import com.example.bank.customer.bank.Banks;
 import com.example.bank.customer.bank.CreditType;
 import com.example.bank.customer.creating_requests.requests.CustomerRequest;
@@ -77,7 +77,7 @@ public class RequestController {
         List<CustomerModel> customerModels;
         try {
            customerModels = requestService.calculateRisks(customerModel, customerOp, creditTime);
-        }catch (DuplicateCustomerRequest e) {
+        }catch (DuplicateCustomerRequestException e) {
             System.out.println(e.getMessage());
             return null;
         }
