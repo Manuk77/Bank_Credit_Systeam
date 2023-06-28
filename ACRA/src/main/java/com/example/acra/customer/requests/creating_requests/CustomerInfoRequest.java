@@ -52,12 +52,11 @@ public record CustomerInfoRequest(
         @JsonProperty("phone")
         String phone,
 
+
         @NotNullEmptyBlankString
         @Email
         @JsonProperty("email")
         String email
-
-
 
 ) {
 

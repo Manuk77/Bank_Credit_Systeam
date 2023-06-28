@@ -89,13 +89,16 @@ public class BankService {
                                 final WorkingPlaceModel workingPlaceModel) {
 
         Optional<CustomerEntity> customerEntity = getCustomer(passportModel.getPassportNumber());
-        if (!customerEntity.isPresent())
+        if (customerEntity.isEmpty())
             return saveAllEntities(new AddressEntity(addressModel), new PassportEntity(passportModel ),
                     new WorkingPlaceEntity(workingPlaceModel), new CustomerHistoryEntity(customerHistory),
                     customerInfoModel, mapToCreditEntity(customerHistory.getCreditModels()));
+        for (CreditEntity customer : customerEntity.get().getCustomerHistory().getCredits()) {
+            if(customer.getAccepted() || !customer.getAccepted() && customerHistory.getCreditModels().get(0).equals(new CreditModel(customer))){
+                return false;
+            }
 
-        if (customerEntity.get().getCustomerHistory().getCredits().size() == customerHistory.getCreditModels().size())
-            return false;
+        }
         return addNewCredit(customerHistory.getCreditModels().get(customerHistory.getCreditModels().size() - 1), customerEntity);
     }
 

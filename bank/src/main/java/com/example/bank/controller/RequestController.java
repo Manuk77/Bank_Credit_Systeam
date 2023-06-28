@@ -144,14 +144,8 @@ public class RequestController {
      @return True if the POST request was successful and received a response indicating success, false otherwise.
      */
     private boolean postNotAcceptedRequests(final CustomerRequest customerRequest) {
-        bankController.saveOrUpdateAcceptedCustomers(customerRequest);
-        final String urlRejected = "http://localhost:8080/Customer/saveCustomerOrUpdateCredit"; // url of postMethod where is going to be passed CustomerRequest
-        RestTemplate postRequest = new RestTemplate();
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<CustomerRequest> customerRequestHttpEntity = new HttpEntity<>(customerRequest, httpHeaders);
-        ResponseEntity<Boolean> response = postRequest.exchange(urlRejected, HttpMethod.POST, customerRequestHttpEntity, Boolean.class);
-        return Boolean.TRUE.equals(response.getBody());
+        return bankController.saveOrUpdateAcceptedCustomers(customerRequest) != null;
+
     }
 
     /**
