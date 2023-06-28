@@ -10,7 +10,7 @@ public record WorkingPlaceResponse(
         String name,
         @JsonProperty("salary")
         String salary
-) {
+){
     public static WorkingPlaceResponse getFromModel(WorkingPlaceModel workingPlaceModel){
         return new
                 WorkingPlaceResponse(

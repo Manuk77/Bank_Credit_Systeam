@@ -1,10 +1,11 @@
-package com.example.acra.annotation;
+package com.example.acra.validation.annotations;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import jakarta.validation.ReportAsSingleViolation;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import java.lang.annotation.*;
 
@@ -12,10 +13,11 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = {})
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
+@NotNull
 @NotEmpty
 @NotBlank
 @ReportAsSingleViolation
-public @interface NotBlankEmptyString {
+public @interface NotNullEmptyBlankString {
     String message() default "Invalid string";
 
     Class<?>[] groups() default {};

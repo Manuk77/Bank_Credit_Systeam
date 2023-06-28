@@ -1,4 +1,4 @@
-package com.example.acra.annotation;
+package com.example.acra.validation.valid_classes;
 
 public class Pattern {
 

@@ -1,5 +1,6 @@
-package com.example.acra.annotation;
+package com.example.acra.validation.valid_classes;
 
+import com.example.acra.validation.annotations.ValidCreditDates;
 import com.example.acra.customer.requests.creating_requests.CreditRequest;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
