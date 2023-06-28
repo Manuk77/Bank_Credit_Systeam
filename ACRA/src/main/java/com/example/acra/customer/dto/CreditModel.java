@@ -4,6 +4,8 @@ import com.example.acra.customer.bank.Banks;
 import com.example.acra.customer.bank.CreditType;
 import com.example.acra.customer.entity.CreditEntity;
 import com.example.acra.customer.requests.creating_requests.CreditRequest;
+import com.example.acra.customer.response.CreditResponse;
+
 import java.sql.Date;
 
 public class CreditModel {
@@ -35,6 +37,17 @@ public class CreditModel {
     }
 
     public CreditModel(final CreditRequest creditRequest) {
+        this.paymentPerMonth = creditRequest.paymentPerMonth();
+        this.startCreditDate = Date.valueOf(creditRequest.startCreditDate());
+        this.creditType = CreditType.valueOf(creditRequest.creditType());
+        this.percent = Byte.valueOf(creditRequest.percent());
+        this.loanAmount = creditRequest.loanAmount();
+        this.endCreditDate = Date.valueOf(creditRequest.endCreditDate());
+        this.bankName = Banks.valueOf(creditRequest.bankName());
+        this.creditState = Boolean.valueOf(creditRequest.creditState());
+        this.isAccepted = Boolean.valueOf(creditRequest.isAccepted());
+    }
+    public CreditModel(final CreditResponse creditRequest) {
         this.paymentPerMonth = creditRequest.paymentPerMonth();
         this.startCreditDate = Date.valueOf(creditRequest.startCreditDate());
         this.creditType = CreditType.valueOf(creditRequest.creditType());

@@ -2,7 +2,10 @@ package com.example.acra.customer.dto;
 
 import com.example.acra.customer.entity.CustomerEntity;
 import com.example.acra.customer.requests.creating_requests.CustomerInfoRequest;
+import com.example.acra.customer.response.CustomerInfoResponse;
+import lombok.Builder;
 
+@Builder
 public class CustomerInfoModel {
 
 
@@ -15,9 +18,33 @@ public class CustomerInfoModel {
     private  String email;
     private Boolean flag;
 
+    public CustomerInfoModel(String firstName,
+                             String lastName,
+                             String birthDate,
+                             Integer age,
+                             String phone,
+                             String email,
+                             Boolean flag) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+        this.age = age;
+        this.phone = phone;
+        this.email = email;
+        this.flag = flag;
+    }
 
     public CustomerInfoModel(final CustomerInfoRequest customerInfoRequest) {
         
+        this.firstName = customerInfoRequest.firstName();
+        this.lastName = customerInfoRequest.lastName();
+        this.birthDate = customerInfoRequest.birthDate();
+        this.age = Integer.parseInt(customerInfoRequest.age());
+        this.phone = customerInfoRequest.phone();
+        this.email = customerInfoRequest.email();
+    }
+    public CustomerInfoModel(final CustomerInfoResponse customerInfoRequest) {
+
         this.firstName = customerInfoRequest.firstName();
         this.lastName = customerInfoRequest.lastName();
         this.birthDate = customerInfoRequest.birthDate();

@@ -4,6 +4,8 @@ import com.example.acra.customer.entity.CreditEntity;
 import com.example.acra.customer.entity.CustomerHistoryEntity;
 import com.example.acra.customer.requests.creating_requests.CreditRequest;
 import com.example.acra.customer.requests.creating_requests.CustomerHistoryRequest;
+import com.example.acra.customer.response.CreditResponse;
+import com.example.acra.customer.response.CustomerHistoryResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,12 @@ public class CustomerHistoryModel {
 
     public CustomerHistoryModel(final CustomerHistoryRequest customerHistoryRequest) {
         this.creditModels = castFromRequestToModel(customerHistoryRequest.creditRequest());
+        this.hasActiveCredit = Boolean.valueOf(customerHistoryRequest.hasActiveCredit());
+        this.salary = customerHistoryRequest.salary();
+        this.creditScore = Short.valueOf(customerHistoryRequest.creditScore());
+    }
+    public CustomerHistoryModel(final CustomerHistoryResponse customerHistoryRequest) {
+        this.creditModels = castFromResponseToModel(customerHistoryRequest.creditResponse());
         this.hasActiveCredit = Boolean.valueOf(customerHistoryRequest.hasActiveCredit());
         this.salary = customerHistoryRequest.salary();
         this.creditScore = Short.valueOf(customerHistoryRequest.creditScore());
@@ -86,6 +94,11 @@ public class CustomerHistoryModel {
     private List<CreditModel> castFromRequestToModel(final List<CreditRequest> creditRequests) {
         List<CreditModel> creditModels = new ArrayList<>();
         creditRequests.forEach(creditRequest -> creditModels.add(new CreditModel(creditRequest)));
+        return  creditModels;
+    }
+    private List<CreditModel> castFromResponseToModel(final List<CreditResponse> creditResponses) {
+        List<CreditModel> creditModels = new ArrayList<>();
+        creditResponses.forEach(creditRequest -> creditModels.add(new CreditModel(creditRequest)));
         return  creditModels;
     }
 }
