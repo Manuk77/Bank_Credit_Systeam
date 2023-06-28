@@ -69,13 +69,13 @@ public class FilterCustomerInfo {
      */
     private static Integer customerIncome(final List<CreditModel> creditModels, final Integer salary) {
 
-        int salary1 = salary;
+        double salary1 = salary;
         for (final CreditModel cm: creditModels) {
             if (cm.getCreditState()) {
-                salary1 -= Integer.parseInt(cm.getPaymentPerMonth());
+                salary1 -= Double.parseDouble(cm.getPaymentPerMonth());
             }
         }
-        return salary1;
+        return (int) salary1;
     }
 
 
