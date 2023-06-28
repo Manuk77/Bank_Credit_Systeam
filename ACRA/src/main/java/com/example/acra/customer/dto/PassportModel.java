@@ -1,6 +1,7 @@
 package com.example.acra.customer.dto;
 import com.example.acra.customer.entity.PassportEntity;
 import com.example.acra.customer.requests.creating_requests.PassportRequest;
+import com.example.acra.customer.response.PassportResponse;
 
 import java.sql.Date;
 
@@ -34,6 +35,16 @@ public class PassportModel {
         this.issueDate = Date.valueOf(passportRequest.issueDate());
         this.expiryDate = Date.valueOf(passportRequest.expiryDate());
         this.passport_number = passportRequest.passport_number();
+        this.firstName = passportRequest.firstName();
+        this.lastName = passportRequest.lastName();
+        this.birthDate = Date.valueOf(passportRequest.birthDate());
+    }
+    public PassportModel(final PassportResponse passportRequest) {
+        this.authority = passportRequest.authority();
+        this.gender = passportRequest.gender();
+        this.issueDate = Date.valueOf(passportRequest.issueDate());
+        this.expiryDate = Date.valueOf(passportRequest.expiryDate());
+        this.passport_number = passportRequest.passportNumber();
         this.firstName = passportRequest.firstName();
         this.lastName = passportRequest.lastName();
         this.birthDate = Date.valueOf(passportRequest.birthDate());
