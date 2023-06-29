@@ -41,7 +41,7 @@ public class CustomerControllerTest {
         CustomerHistoryResponse customerHistoryResponse = new CustomerHistoryResponse("267900", "true",
                 "591", List.of(
                 new CreditResponse("AMERIA", "362150", "CREDIT", "39836.50000000001", "2023-06-28", "2025-06-28",
-                        "true", "true", "10")
+                        "true", "true", "true","10")
         ));
 
         CustomerResponse mockResponse = new CustomerResponse(addressResponse, passportResponse, customerInfoResponse,
