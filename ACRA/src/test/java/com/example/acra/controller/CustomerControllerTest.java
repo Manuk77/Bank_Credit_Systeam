@@ -31,6 +31,7 @@ public class CustomerControllerTest {
     @Test
     public void testGetInfo() {
 
+
         AddressResponse addressResponse = new AddressResponse("Abovyan", "Yerevan", "Armenia");
         PassportResponse passportResponse = new PassportResponse("Arin", "Avaneusyan", "2001-12-31", "male",
                 "AA8800107", "2019-04-21", "2029-04-21", "ARM 1");
