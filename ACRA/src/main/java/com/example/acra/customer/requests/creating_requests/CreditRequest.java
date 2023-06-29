@@ -43,6 +43,9 @@ public record CreditRequest(
         @NotNullEmptyBlankString
         @JsonProperty("credit_state")
         String creditState,
+        @NotNullEmptyBlankString
+        @JsonProperty("is_risk_accepted")
+        String isRiskAccepted,
 
         @NotNullEmptyBlankString
         @Pattern(regexp = "^\\d+(\\.\\d+)?%?$")
