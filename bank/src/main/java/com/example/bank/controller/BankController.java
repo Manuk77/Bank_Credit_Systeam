@@ -2,6 +2,8 @@ package com.example.bank.controller;
 
 
 
+import com.example.bank.bank_entity.BankEntity;
+import com.example.bank.bank_model.BankModel;
 import com.example.bank.customer.creating_requests.requests.CreditRequest;
 import com.example.bank.customer.creating_requests.requests.CustomerRequest;
 import com.example.bank.customer.dto.*;
@@ -12,6 +14,8 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.sql.Date;
 import java.util.Optional;
 
 /**
@@ -22,6 +26,7 @@ import java.util.Optional;
 @RequestMapping(value = "/bank")
 public class BankController {
     private final BankService bankService;
+
 
     /**
      * Constructs a new instance of BankController with the provided BankService.
@@ -87,7 +92,6 @@ public class BankController {
 
         return null;
     }
-
     @PostMapping(value = "saveResultCustomerInfo")
     public void saveResultOfCustomer(@NonNull final ResultCustomerInfoModel resultCustomerInfoModel) {
         bankService.saveResultOfCustomer(resultCustomerInfoModel);

@@ -1,5 +1,6 @@
 package com.example.bank.service;
 
+import com.example.bank.bank_entity.BankEntity;
 import com.example.bank.customer.dto.*;
 import com.example.bank.customer.entity.*;
 import com.example.bank.repository.*;
@@ -60,6 +61,11 @@ public class BankService {
 
     }
 
+    public void saveBank(final BankEntity bank) {
+        bankRepository.save(bank);
+    }
+
+
     /**
      * Retrieves customer information based on the provided passport number.
      *
@@ -91,16 +97,21 @@ public class BankService {
                                 final WorkingPlaceModel workingPlaceModel) {
 
         Optional<CustomerEntity> customerEntity = getCustomer(passportModel.getPassportNumber());
-        if (customerEntity.isEmpty())
+        if (customerEntity.isEmpty()) {
             return saveAllEntities(new AddressEntity(addressModel), new PassportEntity(passportModel ),
                     new WorkingPlaceEntity(workingPlaceModel), new CustomerHistoryEntity(customerHistory),
                     customerInfoModel, mapToCreditEntity(customerHistory.getCreditModels()));
+        }
+
+
         for (CreditEntity customer : customerEntity.get().getCustomerHistory().getCredits()) {
             if(customer.getAccepted() || !customer.getAccepted() && customerHistory.getCreditModels().get(0).equals(new CreditModel(customer))){
                 return false;
             }
 
         }
+
+
         return addNewCredit(customerHistory.getCreditModels().get(customerHistory.getCreditModels().size() - 1), customerEntity.get());
     }
 
@@ -118,6 +129,7 @@ public class BankService {
         return true;
 
     }
+
 
     public void saveResultOfCustomer(final ResultCustomerInfoModel resultCustomerInfoModel) {
         resultCustomerInfoRepository.save(new ResultCustomerInfoEntity(resultCustomerInfoModel));

@@ -46,6 +46,9 @@ public record CreditRequest(
         @NotNullEmptyBlankString
         @JsonProperty("is_accepted")
         String isAccepted,
+        @NotNullEmptyBlankString
+        @JsonProperty("is_risk_accepted")
+        String isRiskAccepted,
 
         @NotNullEmptyBlankString
         @Pattern(regexp = "^\\d+(\\.\\d+)?%?$")
@@ -63,6 +66,7 @@ public record CreditRequest(
                 creditResponse.endCreditDate(),
                 creditResponse.creditState(),
                 creditResponse.isAccepted(),
+                creditResponse.isRiskAccepted(),
                 creditResponse.percent());
     }
 
@@ -76,6 +80,7 @@ public record CreditRequest(
                 creditModel.getEndCreditDate().toString(),
                 creditModel.getCreditState().toString(),
                 creditModel.getAccepted().toString(),
+                creditModel.getRiskAccepted().toString(),
                 creditModel.getPercent().toString()
 
         );
@@ -92,6 +97,7 @@ public record CreditRequest(
                         creditRequest.endCreditDate(),
                         creditRequest.creditState(),
                         creditRequest.isAccepted(),
+                        creditRequest.isRiskAccepted(),
                         creditRequest.percent()
                 )).toList();
     }

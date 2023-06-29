@@ -1,39 +1,43 @@
 package com.example.bank.bank_entity;
 
+import com.example.bank.bank_model.BankModel;
 import com.example.bank.customer.entity.CustomerEntity;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 @Table(name = "bank")
-public class Bank {
+public class BankEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 15)
     private String name;
-    @Column(name = "foundDate", nullable = false)
+    @Column(name = "foundDate", nullable = false, length = 15)
     private Date foundDate;
-    @Column(name = "capital", length = 100, nullable = false)
+    @Column(name = "capital",  nullable = false, length = 50)
     private String capital;
-    @OneToMany(mappedBy = "bank")
-    private List<Employee> employees;
     @OneToMany(mappedBy = "bank")
     private List<CustomerEntity> customerEntities;
 
-    public Bank() {
+    public BankEntity() {
     }
 
-    public Bank(final String name, final Date foundDate, final String capital,
-                final List<Employee> employees, final List<CustomerEntity> customerEntities) {
+    public BankEntity(final BankModel bankModel) {
+        this.name = bankModel.getName();
+        this.capital = bankModel.getCapital();
+        this.foundDate = Date.valueOf(LocalDate.now());
+    }
+
+    public BankEntity(final String name, final String capital) {
         this.name = name;
-        this.foundDate = foundDate;
+        this.foundDate = Date.valueOf(LocalDate.now());
         this.capital = capital;
-        this.employees = employees;
-        this.customerEntities = customerEntities;
+        this.customerEntities = null;
     }
 
     public Long getId() {
@@ -66,14 +70,6 @@ public class Bank {
 
     public void setCapital(final String capital) {
         this.capital = capital;
-    }
-
-    public List<Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(final List<Employee> employees) {
-        this.employees = employees;
     }
 
     public List<CustomerEntity> getCustomerEntities() {

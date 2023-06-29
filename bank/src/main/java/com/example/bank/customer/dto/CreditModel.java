@@ -21,12 +21,13 @@ public class CreditModel {
     private Byte percent;
     private Boolean creditState;
     private Boolean isAccepted;
-    //private Boolean isRiskAccepted;
+    private Boolean isRiskAccepted;
 
 
     public CreditModel(final CreditType creditType, final Banks bankName, final String loanAmount,
                        final Date startCreditDate, final Date endCreditDate, final String paymentPerMonth,
-                       final Byte percent, final Boolean creditState, final Boolean isAccepted) {
+                       final Byte percent, final Boolean creditState, final Boolean isAccepted,
+                       final Boolean isRiskAccepted) {
 
         this.bankName = bankName;
         this.creditType = creditType;
@@ -37,6 +38,8 @@ public class CreditModel {
         this.loanAmount = loanAmount;
         this.creditState = creditState;
         this.isAccepted = isAccepted;
+        this.isRiskAccepted = isRiskAccepted;
+
     }
 
     public CreditModel(final CreditEntity creditEntity) {
@@ -63,6 +66,7 @@ public class CreditModel {
         this.bankName = Banks.valueOf(creditRequest.bankName());
         this.creditState = Boolean.valueOf(creditRequest.creditState());
         this.isAccepted = Boolean.valueOf(creditRequest.isAccepted());
+        this.isRiskAccepted = Boolean.valueOf(creditRequest.isRiskAccepted());
     }
 
     public CreditModel(final CreditResponse creditResponse) {
@@ -75,6 +79,7 @@ public class CreditModel {
         this.bankName = Banks.valueOf(creditResponse.bankName());
         this.creditState = Boolean.valueOf(creditResponse.creditState());
         this.isAccepted = Boolean.valueOf(creditResponse.isAccepted());
+        this.isRiskAccepted = Boolean.valueOf(creditResponse.isRiskAccepted());
     }
 
 
@@ -155,6 +160,14 @@ public class CreditModel {
 
     public void setCreditState(Boolean creditState) {
         this.creditState = creditState;
+    }
+
+    public Boolean getRiskAccepted() {
+        return isRiskAccepted;
+    }
+
+    public void setRiskAccepted(Boolean riskAccepted) {
+        isRiskAccepted = riskAccepted;
     }
 
     @Override

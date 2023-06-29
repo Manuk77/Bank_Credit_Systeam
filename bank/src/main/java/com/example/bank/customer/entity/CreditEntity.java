@@ -36,8 +36,8 @@ public class CreditEntity {
     private Boolean creditState;
     @Column(name = "is_accepted", nullable = false, length = 10)
     private Boolean isAccepted;
-//    @Column(name = "is_risk_accepted", nullable = false, length = 10)
-//    private Boolean isRiskAccepted;
+    @Column(name = "is_risk_accepted", nullable = false, length = 10)
+    private Boolean isRiskAccepted;
     @Column(name = "percent", nullable = false, length = 10)
     private byte percent;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,7 +47,8 @@ public class CreditEntity {
 
     public CreditEntity(final Banks bankName, final String loanAmount, final String paymentPerMonth, final Date startCreditDate,
                         final Date endCreditDate, final byte percent, final CustomerHistoryEntity customerHistoryEntity,
-                        final CreditType creditType, final Boolean isAccepted, final Boolean creditState) {
+                        final CreditType creditType, final Boolean isAccepted, final Boolean creditState,
+                        final Boolean isRiskAccepted) {
 
         this.bankName = Banks.valueOf(bankName.toString());
         this.loanAmount = loanAmount;
@@ -59,12 +60,11 @@ public class CreditEntity {
         this.creditType = CreditType.valueOf(creditType.toString());
         this.creditState = creditState;
         this.isAccepted = isAccepted;
-       // this.isRiskAccepted = isRiskAccepted;
+       this.isRiskAccepted = isRiskAccepted;
 
     }
 
     public CreditEntity(final CreditModel creditModel) {
-
         this.creditType = CreditType.valueOf(creditModel.getCreditType().toString());
         this.bankName = Banks.valueOf(creditModel.getBankName().toString());
         this.loanAmount = creditModel.getLoanAmount();
@@ -74,6 +74,7 @@ public class CreditEntity {
         this.creditState = creditModel.getCreditState();
         this.isAccepted = creditModel.getAccepted();
         this.paymentPerMonth = creditModel.getPaymentPerMonth();
+        this.isRiskAccepted = creditModel.getRiskAccepted();
     }
 
     public CreditEntity() {
@@ -162,5 +163,13 @@ public class CreditEntity {
 
     public void setCreditState(Boolean creditState) {
         this.creditState = creditState;
+    }
+
+    public Boolean getRiskAccepted() {
+        return isRiskAccepted;
+    }
+
+    public void setRiskAccepted(Boolean riskAccepted) {
+        isRiskAccepted = riskAccepted;
     }
 }
