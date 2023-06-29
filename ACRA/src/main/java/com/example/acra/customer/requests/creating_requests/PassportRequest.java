@@ -1,12 +1,14 @@
 package com.example.acra.customer.requests.creating_requests;
 
-import com.example.acra.annotation.ValidPassportDates;
-import com.example.acra.annotation.NotNullEmptyBlankString;
+import com.example.acra.validation.annotations.ValidExpiryDate;
+import com.example.acra.validation.annotations.ValidPassportDates;
+import com.example.acra.validation.annotations.NotNullEmptyBlankString;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 
 @ValidPassportDates(message = "Invalid issue/expiry date for PassportUpdateRequest: ")
+@ValidExpiryDate
 public record PassportRequest(
 
         @NotNullEmptyBlankString
@@ -53,7 +55,7 @@ public record PassportRequest(
 
         @NotNullEmptyBlankString
         @Pattern(
-                regexp = com.example.acra.annotation.Pattern.DATE_PATTERN,
+                regexp = com.example.acra.validation.valid_classes.Pattern.DATE_PATTERN,
                 message = "Regex for 'issueDate': yyyy-mm-dd"
         )
         @JsonProperty("issue_date")
@@ -61,7 +63,7 @@ public record PassportRequest(
 
         @NotNullEmptyBlankString
         @Pattern(
-                regexp = com.example.acra.annotation.Pattern.DATE_PATTERN,
+                regexp = com.example.acra.validation.valid_classes.Pattern.DATE_PATTERN,
                 message = "Regex for 'expiryDate': yyyy-mm-dd"
         )
         @JsonProperty("expiry_date")

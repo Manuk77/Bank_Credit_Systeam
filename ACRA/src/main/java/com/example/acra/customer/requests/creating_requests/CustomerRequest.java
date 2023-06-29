@@ -1,9 +1,9 @@
 package com.example.acra.customer.requests.creating_requests;
 
-import com.example.acra.annotation.NotNullEmptyBlankString;
+import com.example.acra.validation.annotations.ValidFirstNameAndLastName;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
-
+@ValidFirstNameAndLastName
 public record CustomerRequest(
         @Valid
         @JsonProperty("address_info")

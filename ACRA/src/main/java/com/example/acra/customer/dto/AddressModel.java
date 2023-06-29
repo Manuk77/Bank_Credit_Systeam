@@ -2,6 +2,7 @@ package com.example.acra.customer.dto;
 
 import com.example.acra.customer.entity.AddressEntity;
 import com.example.acra.customer.requests.creating_requests.AddressRequest;
+import com.example.acra.customer.response.AddressResponse;
 
 public class AddressModel {
     private String country;
@@ -15,6 +16,11 @@ public class AddressModel {
     }
 
     public AddressModel(final AddressRequest address) {
+       this.city = address.city();
+       this.country = address.country();
+       this.street = address.street();
+    }
+    public AddressModel(final AddressResponse address) {
        this.city = address.city();
        this.country = address.country();
        this.street = address.street();

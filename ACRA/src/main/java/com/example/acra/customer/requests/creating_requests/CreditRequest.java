@@ -1,8 +1,8 @@
 package com.example.acra.customer.requests.creating_requests;
 
 
-import com.example.acra.annotation.ValidCreditDates;
-import com.example.acra.annotation.NotNullEmptyBlankString;
+import com.example.acra.validation.annotations.ValidCreditDates;
+import com.example.acra.validation.annotations.NotNullEmptyBlankString;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Pattern;
 

@@ -3,6 +3,7 @@ package com.example.bank.customer.creating_requests.requests;
 import com.example.bank.customer.dto.PassportModel;
 import com.example.bank.customer.response.PassportResponse;
 import com.example.bank.validator.annotation.NotNullEmptyBlankString;
+import com.example.bank.validator.annotation.ValidExpiryDate;
 import com.example.bank.validator.annotation.ValidPassportDates;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Pattern;
@@ -11,6 +12,7 @@ import org.hibernate.validator.constraints.Length;
 
 
 @ValidPassportDates (message = "Invalid issue/expiry date for PassportUpdateRequest: ")
+@ValidExpiryDate
 public record PassportRequest(
 
         @NotNullEmptyBlankString
@@ -64,10 +66,12 @@ public record PassportRequest(
         String issueDate,
 
         @NotNullEmptyBlankString
+
         @Pattern(
                 regexp = com.example.bank.validator.valid_classes.Pattern.DATE_PATTERN,
                 message = "Regex for 'expiryDate': yyyy-mm-dd"
         )
+
         @JsonProperty("expiry_date")
         String expiryDate,
 

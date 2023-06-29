@@ -2,12 +2,17 @@ package com.example.acra.customer.dto;
 
 import com.example.acra.customer.entity.WorkingPlaceEntity;
 import com.example.acra.customer.requests.creating_requests.WorkingPlaceRequest;
+import com.example.acra.customer.response.WorkingPlaceResponse;
 
 public class WorkingPlaceModel {
     private String name;
     private String salary;
 
     public WorkingPlaceModel(final WorkingPlaceRequest workingPlaceRequest) {
+        this.salary = workingPlaceRequest.salary();
+        this.name = workingPlaceRequest.name();
+    }
+    public WorkingPlaceModel(final WorkingPlaceResponse workingPlaceRequest) {
         this.salary = workingPlaceRequest.salary();
         this.name = workingPlaceRequest.name();
     }

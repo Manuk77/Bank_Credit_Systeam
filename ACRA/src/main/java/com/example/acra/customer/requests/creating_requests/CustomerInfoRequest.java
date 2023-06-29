@@ -1,10 +1,11 @@
 package com.example.acra.customer.requests.creating_requests;
 
-import com.example.acra.annotation.NotNullEmptyBlankString;
+import com.example.acra.validation.annotations.NotNullEmptyBlankString;
+import com.example.acra.validation.annotations.ValidAge;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
-
+@ValidAge
 public record CustomerInfoRequest(
 
 
