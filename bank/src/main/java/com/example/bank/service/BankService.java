@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -27,6 +26,7 @@ public class BankService {
     private final AddressRepository addressRepository;
     private final CustomerHistoryRepository customerHistoryRepository;
     private final PassportRepository passportRepository;
+    private final ResultCustomerInfoRepository resultCustomerInfoRepository;
 
     /**
      * Constructs a new instance of the BankService class.
@@ -46,7 +46,8 @@ public class BankService {
                        final CreditRepository creditRepository,
                        final AddressRepository addressRepository,
                        final CustomerHistoryRepository customerHistoryRepository,
-                       final PassportRepository passportRepository){
+                       final PassportRepository passportRepository,
+                       final ResultCustomerInfoRepository resultCustomerInfoRepository){
 
         this.bankRepository = bankRepository;
         this.creditRepository = creditRepository;
@@ -55,6 +56,7 @@ public class BankService {
         this.customerHistoryRepository = customerHistoryRepository;
         this.addressRepository = addressRepository;
         this.passportRepository = passportRepository;
+        this.resultCustomerInfoRepository = resultCustomerInfoRepository;
 
     }
 
@@ -99,7 +101,7 @@ public class BankService {
             }
 
         }
-        return addNewCredit(customerHistory.getCreditModels().get(customerHistory.getCreditModels().size() - 1), customerEntity);
+        return addNewCredit(customerHistory.getCreditModels().get(customerHistory.getCreditModels().size() - 1), customerEntity.get());
     }
 
     /**
@@ -109,12 +111,16 @@ public class BankService {
      * @param customerEntity The passport number of the customer.
      * @return true if the credit is successfully added for the customer, false otherwise.
      */
-    public boolean addNewCredit(final CreditModel creditModel, final Optional<CustomerEntity> customerEntity) {
+    public boolean addNewCredit(final CreditModel creditModel, final CustomerEntity customerEntity) {
         CreditEntity creditEntity = new CreditEntity(creditModel);
-        creditEntity.setCustomerHistoryEntity(customerEntity.get().getCustomerHistory());
+        creditEntity.setCustomerHistoryEntity(customerEntity.getCustomerHistory());
         creditRepository.save(creditEntity);
         return true;
 
+    }
+
+    public void saveResultOfCustomer(final ResultCustomerInfoModel resultCustomerInfoModel) {
+        resultCustomerInfoRepository.save(new ResultCustomerInfoEntity(resultCustomerInfoModel));
     }
 
     /**

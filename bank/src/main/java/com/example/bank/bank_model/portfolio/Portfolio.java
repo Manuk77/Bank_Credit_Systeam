@@ -16,10 +16,12 @@ import java.util.*;
  */
 public class Portfolio {
     private List<CustomerModel> customerModels;
-    private static List<CustomerModel> notIncludedCustomerModelLoans = new ArrayList<>();
+    private static final List<CustomerModel> notIncludedCustomerModelLoans = new ArrayList<>();
     private List<CustomerWithMathModelFields> customersMath;
-    private Double Sum = Double.MAX_VALUE;
+    public static List<Integer> y;
+    private static Double Sum = Double.MAX_VALUE;
     private List<Integer> acceptableLoan;
+    private static Double R;
 
     /**
      * Constructs an empty Portfolio object.
@@ -109,8 +111,10 @@ public class Portfolio {
             }
             // Update the minimum value of L and the acceptable loan list
             if (summ < Sum) {
+                Portfolio.R = sum1;
                 Sum = summ;
                 acceptableLoan = listN;
+                y = listN;
             }
 
         }
@@ -143,6 +147,7 @@ public class Portfolio {
 
         }
         System.out.println("acceptable customer loan count is -> " + j);
+        System.out.println("portfeli ekamtaberutyun -> " + this.R);
         return optimalLoans;
     }
 
@@ -154,7 +159,6 @@ public class Portfolio {
      * and adds it to the list of L values.
      * After calculating all possible options, the method finds the minimum element in the list of L values,
      * and retrieves the binary list of N associated with that minimum value.
-     *
      * Example of generating binary lists:
      * [1, 0, 0, 0, ..., 0]
      * [0, 1, 0, 0, ..., 0]
@@ -192,5 +196,17 @@ public class Portfolio {
      */
     public static List<CustomerModel> getNotIncludedCustomerModelLoans() {
         return notIncludedCustomerModelLoans;
+    }
+
+    public static List<Integer> getY() {
+        return y;
+    }
+
+    public static Double getSum() {
+        return Sum;
+    }
+
+    public static Double getR() {
+        return R;
     }
 }

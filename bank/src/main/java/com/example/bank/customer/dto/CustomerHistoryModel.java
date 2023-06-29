@@ -124,11 +124,11 @@ public class CustomerHistoryModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CustomerHistoryModel that = (CustomerHistoryModel) o;
-        return Objects.equals(salary, that.salary) && Objects.equals(hasActiveCredit, that.hasActiveCredit) && Objects.equals(creditScore, that.creditScore) && Objects.equals(creditModels, that.creditModels);
+        return Objects.equals(creditModels, that.creditModels);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(salary, hasActiveCredit, creditScore, creditModels);
+        return Objects.hash(creditModels);
     }
 }

@@ -8,6 +8,7 @@ import com.example.bank.customer.creating_requests.requests.CustomerRequest;
 import com.example.bank.customer.creating_requests.requests.CustomerRequestFiltered;
 import com.example.bank.customer.dto.CreditModel;
 import com.example.bank.customer.dto.CustomerModel;
+import com.example.bank.customer.dto.ResultCustomerInfoModel;
 import com.example.bank.customer.response.CustomerResponse;
 import com.example.bank.mailmessage.EmailService;
 import com.example.bank.service.RequestService;
@@ -41,7 +42,6 @@ public class RequestController {
 
     private final RequestService requestService;
     private final BankController bankController;
-
     private final EmailService emailService;
 
     /**
@@ -81,6 +81,7 @@ public class RequestController {
             System.out.println(e.getMessage());
             return null;
         }
+        List<CustomerRequest> customerRequests = new ArrayList<>();
 
         if (customerModels == null) {
             bankController.saveOrUpdateRejectedCustomers(CustomerRequest.getFromModel(customerModel));
@@ -90,27 +91,40 @@ public class RequestController {
                 throw new RuntimeException(e);
             }
             return List.of(CustomerResponse.getFromModel(customerModel));
-        }
-        List<CustomerRequest> customerRequests = new ArrayList<>();
-        for (CustomerModel cm : customerModels) {
-            customerRequests.add(CustomerRequest.getFromModel(cm));
-            if (postAcceptedRequests(CustomerRequest.getFromModel(cm))) {
-                try {
-                    emailService.sendEmailCustomers("hastatvel e",cm);
-                } catch (MessagingException | DocumentException | IOException e) {
-                    throw new RuntimeException(e);
+        } else {
+
+            for (CustomerModel cm : customerModels) {
+                customerRequests.add(CustomerRequest.getFromModel(cm));
+                if (postAcceptedRequests(CustomerRequest.getFromModel(cm))) {
+                    try {
+                        emailService.sendEmailCustomers("hastatvel e",cm);
+                    } catch (MessagingException | DocumentException | IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+            for (CustomerModel cm : Portfolio.getNotIncludedCustomerModelLoans()) {
+                if(postNotAcceptedRequests(CustomerRequest.getFromModel(cm))) {
+                    try {
+                        emailService.sendEmailCustomers("merjvel e portfolioic", cm);
+                    }catch (MessagingException | DocumentException | IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+            if (RequestService.resultCustomerInfoModels.size() == 10) {
+                for (int i = 0; i < RequestService.resultCustomerInfoModels.size(); ++i) {
+                    RequestService.resultCustomerInfoModels.get(i).setY(Portfolio.y.get(i));
+                    if (i == 0) {
+                        RequestService.resultCustomerInfoModels.get(i).setR(Portfolio.getR());
+                        RequestService.resultCustomerInfoModels.get(i).setL(Portfolio.getSum());
+                    }
+                    bankController.saveResultOfCustomer(RequestService.resultCustomerInfoModels.get(i));
+
                 }
             }
         }
-        for (CustomerModel cm : Portfolio.getNotIncludedCustomerModelLoans()) {
-            if(postNotAcceptedRequests(CustomerRequest.getFromModel(cm))) {
-                try {
-                    emailService.sendEmailCustomers("merjvel e portfolioic", cm);
-                }catch (MessagingException | DocumentException | IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
+
         return customerRequests.stream().map(CustomerResponse::getFromRequest).toList();
     }
 
@@ -125,7 +139,7 @@ public class RequestController {
      */
 
     private boolean postAcceptedRequests(final CustomerRequest customerRequest) {
-        bankController.saveOrUpdateRejectedCustomers(customerRequest);
+        bankController.saveOrUpdateAcceptedCustomers(customerRequest);
         final String urlRejected = "http://localhost:8080/Customer/saveCustomerOrUpdateCredit"; // url of postMethod where is going to be passed CustomerRequest
         RestTemplate postRequest = new RestTemplate();
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -144,8 +158,7 @@ public class RequestController {
      @return True if the POST request was successful and received a response indicating success, false otherwise.
      */
     private boolean postNotAcceptedRequests(final CustomerRequest customerRequest) {
-        return bankController.saveOrUpdateAcceptedCustomers(customerRequest) != null;
-
+        return bankController.saveOrUpdateRejectedCustomers(customerRequest) != null;
     }
 
     /**

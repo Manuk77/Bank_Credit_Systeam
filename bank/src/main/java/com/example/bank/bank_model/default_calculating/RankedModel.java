@@ -1,4 +1,4 @@
-package com.example.bank.bank_model.risk_calculating;
+package com.example.bank.bank_model.default_calculating;
 
 
 

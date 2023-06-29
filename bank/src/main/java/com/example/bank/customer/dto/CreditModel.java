@@ -21,6 +21,7 @@ public class CreditModel {
     private Byte percent;
     private Boolean creditState;
     private Boolean isAccepted;
+    //private Boolean isRiskAccepted;
 
 
     public CreditModel(final CreditType creditType, final Banks bankName, final String loanAmount,
@@ -176,11 +177,13 @@ public class CreditModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CreditModel that = (CreditModel) o;
-        return bankName == that.bankName && Objects.equals(loanAmount, that.loanAmount) && creditType == that.creditType && Objects.equals(paymentPerMonth, that.paymentPerMonth) && Objects.equals(startCreditDate, that.startCreditDate) && Objects.equals(endCreditDate, that.endCreditDate) && Objects.equals(percent, that.percent) && Objects.equals(creditState, that.creditState) && Objects.equals(isAccepted, that.isAccepted);
+        return bankName == that.bankName && Objects.equals(loanAmount, that.loanAmount) &&
+                creditType == that.creditType && Objects.equals(creditState, that.creditState) &&
+                Objects.equals(isAccepted, that.isAccepted);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bankName, loanAmount, creditType, paymentPerMonth, startCreditDate, endCreditDate, percent, creditState, isAccepted);
+        return Objects.hash(bankName, loanAmount, creditType, creditState, isAccepted);
     }
 }

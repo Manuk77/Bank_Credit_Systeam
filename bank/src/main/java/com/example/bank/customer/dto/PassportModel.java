@@ -135,11 +135,11 @@ public class PassportModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PassportModel that = (PassportModel) o;
-        return Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(birthDate, that.birthDate) && Objects.equals(gender, that.gender) && Objects.equals(passport_number, that.passport_number) && Objects.equals(issueDate, that.issueDate) && Objects.equals(expiryDate, that.expiryDate) && Objects.equals(authority, that.authority);
+        return Objects.equals(passport_number, that.passport_number);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, birthDate, gender, passport_number, issueDate, expiryDate, authority);
+        return Objects.hash(passport_number);
     }
 }
