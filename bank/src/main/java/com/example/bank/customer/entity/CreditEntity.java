@@ -36,6 +36,8 @@ public class CreditEntity {
     private Boolean creditState;
     @Column(name = "is_accepted", nullable = false, length = 10)
     private Boolean isAccepted;
+//    @Column(name = "is_risk_accepted", nullable = false, length = 10)
+//    private Boolean isRiskAccepted;
     @Column(name = "percent", nullable = false, length = 10)
     private byte percent;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -57,6 +59,7 @@ public class CreditEntity {
         this.creditType = CreditType.valueOf(creditType.toString());
         this.creditState = creditState;
         this.isAccepted = isAccepted;
+       // this.isRiskAccepted = isRiskAccepted;
 
     }
 

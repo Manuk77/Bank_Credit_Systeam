@@ -88,6 +88,10 @@ public class BankController {
         return null;
     }
 
+    @PostMapping(value = "saveResultCustomerInfo")
+    public void saveResultOfCustomer(@NonNull final ResultCustomerInfoModel resultCustomerInfoModel) {
+        bankService.saveResultOfCustomer(resultCustomerInfoModel);
+    }
 
 
 

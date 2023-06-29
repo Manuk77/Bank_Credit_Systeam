@@ -1,15 +1,10 @@
 package com.example.bank.bank_model.filter_customer_info;
 
-import com.example.bank.bank_model.risk_calculating.CreditHistoryType;
-import com.example.bank.bank_model.risk_calculating.ModelOfRanking;
-import com.example.bank.customer.bank.CreditType;
-import com.example.bank.customer.creating_requests.requests.CustomerRequestFiltered;
+import com.example.bank.bank_model.default_calculating.ModelOfRanking;
 import com.example.bank.customer.dto.CreditModel;
 import com.example.bank.customer.dto.CustomerHistoryModel;
-import com.example.bank.customer.dto.CustomerModel;
 import com.example.bank.customer.dto.CustomerModelFiltered;
-import com.example.bank.customer.response.CreditResponse;
-import com.example.bank.customer.response.CustomerResponse;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +14,7 @@ import java.util.List;
  */
 public class FilterCustomerInfo {
 
-    private static CustomerModelFiltered customerModelFiltered;
+    private static  CustomerModelFiltered customerModelFiltered;
     private static CustomerHistoryModel customerHistoryModel;
 
     /**
@@ -97,5 +92,9 @@ public class FilterCustomerInfo {
 
     public static void setCustomerHistoryModel(final CustomerHistoryModel customerHistoryModel) {
         FilterCustomerInfo.customerHistoryModel = customerHistoryModel;
+    }
+
+    public CustomerModelFiltered getCustomerModelFiltered() {
+        return customerModelFiltered;
     }
 }

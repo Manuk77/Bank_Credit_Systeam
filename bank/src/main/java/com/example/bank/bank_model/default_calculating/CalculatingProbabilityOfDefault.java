@@ -1,4 +1,4 @@
-package com.example.bank.bank_model.risk_calculating;
+package com.example.bank.bank_model.default_calculating;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,16 +8,17 @@ import java.util.List;
  * The `RiskCalculating` class is responsible for performing risk calculations based on a `RankedModel` and credit time.
  * It uses logistic regression to calculate the risk probability for customers and determines if the risk exceeds the threshold set by the bank.
  */
-public class RiskCalculating {
+public class CalculatingProbabilityOfDefault {
     private RankedModel rankedModel;
     private String creditTime;
+    
     public List<Double> PD = new ArrayList<>(); // Probability of Default (PD) values
     public static List<String> creditTimes = new ArrayList<>();
 
     /**
      * Constructs a new empty `RiskCalculating` object.
      */
-    public RiskCalculating() {
+    public CalculatingProbabilityOfDefault() {
     }
 
     /**
@@ -25,7 +26,7 @@ public class RiskCalculating {
      *
      * @param rankedModel The `RankedModel` containing the rankings for different risk factors.
      */
-    public RiskCalculating(final RankedModel rankedModel) {
+    public CalculatingProbabilityOfDefault(final RankedModel rankedModel) {
         this.rankedModel = rankedModel;
     }
 
@@ -62,24 +63,25 @@ public class RiskCalculating {
     private Boolean riskCounting() {
 
 
-        final double betta0 = -0.04798;
-        final double betta1 = -0.00553;
-        final double betta2 = 0.096932;
-        final double betta3 = 0.042873;
-        final double betta4 = 0.151273;
-        final double betta5 = -0.01447;
-        final double betta6 = -0.00565;
+//        final double betta0 = -0.04798;
+//        final double betta1 = -0.00553;
+//        final double betta2 = 0.096932;
+//        final double betta3 = 0.042873;
+//        final double betta4 = 0.151273;
+//        final double betta5 = -0.01447;
+//        final double betta6 = -0.00565;
 
-//        final double betta0 = 0.333811373850653;
-//        final double betta1 = 0.00624585073685336;
-//        final double betta2 = 0.073415350552171;
-//        final double betta3 = 0.000116718158751398;
-//        final double betta4 = 0.0707717296999949;
-//        final double betta5 = -0.0779933503359887;
-//        final double betta6 = 0.101723516747402;
+        final double betta0 = 0.333811373850653;
+        final double betta1 = 0.00624585073685336;
+        final double betta2 = 0.073415350552171;
+        final double betta3 = 0.000116718158751398;
+        final double betta4 = 0.0707717296999949;
+        final double betta5 = -0.0779933503359887;
+        final double betta6 = 0.101723516747402;
 
-        List<Double> Y = new ArrayList<>();
+
         double y;
+        List<Double> Y = new ArrayList<>();
 
         y = betta0 + betta1 * rankedModel.getX1() + betta2 * rankedModel.getX2() + betta3 * rankedModel.getX3() +
                 betta4 * rankedModel.getX4() + betta5 * rankedModel.getX5() + betta6 * rankedModel.getX6();
@@ -110,10 +112,10 @@ public class RiskCalculating {
      *         DPt is the probability of default set by the bank.
      */
     private boolean logisticModel(final Double y) {
-        final double DPt = 0.59;
-        double x = 1 - (1 / (1 + Math.pow(Math.E, y)));
+        final double DPt = 0.5;
+        double x = 1 - (1 / (1 + Math.pow(Math.E, -y)));
         System.out.println("PDi = " + x);
-        if (x > DPt) {
+        if (x < DPt) {
             PD.add(x);
             return true;
         }
@@ -121,5 +123,5 @@ public class RiskCalculating {
     }
 
 
-
+    
 }
