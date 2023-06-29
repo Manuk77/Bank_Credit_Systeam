@@ -24,6 +24,8 @@ public record CreditResponse(
         String isAccepted,
         @JsonProperty("credit_state")
         String creditState,
+        @JsonProperty("is_risk_accepted")
+        String isRiskAccepted,
         @JsonProperty("percent")
         String percent
 ) {
@@ -37,6 +39,7 @@ public record CreditResponse(
                 creditModel.getEndCreditDate().toString(),
                 creditModel.getAccepted().toString(),
                 creditModel.getCreditState().toString(),
+                creditModel.getRiskAccepted().toString(),
                 creditModel.getPercent().toString()
         );
     }
@@ -52,6 +55,7 @@ public record CreditResponse(
                         creditModel.getEndCreditDate().toString(),
                         creditModel.getAccepted().toString(),
                         creditModel.getCreditState().toString(),
+                        creditModel.getRiskAccepted().toString(),
                         creditModel.getPercent().toString()))
                 .toList();
     }

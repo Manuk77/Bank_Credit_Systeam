@@ -2,7 +2,7 @@ package com.example.bank.customer.entity;
 
 
 
-import com.example.bank.bank_entity.Bank;
+import com.example.bank.bank_entity.BankEntity;
 import com.example.bank.customer.dto.CustomerInfoModel;
 import jakarta.persistence.*;
 
@@ -44,7 +44,7 @@ public class CustomerEntity {
     private WorkingPlaceEntity workingPlace;
     @ManyToOne()
     @JoinColumn(name = "bank_id")
-    private Bank bank;
+    private BankEntity bank;
 
     public CustomerEntity() {
     }

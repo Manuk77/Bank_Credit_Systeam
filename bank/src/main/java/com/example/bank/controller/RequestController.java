@@ -11,6 +11,7 @@ import com.example.bank.customer.dto.CustomerModel;
 import com.example.bank.customer.dto.ResultCustomerInfoModel;
 import com.example.bank.customer.response.CustomerResponse;
 import com.example.bank.mailmessage.EmailService;
+import com.example.bank.service.BankService;
 import com.example.bank.service.RequestService;
 import com.itextpdf.text.DocumentException;
 import jakarta.mail.MessagingException;
@@ -41,7 +42,7 @@ import java.util.Optional;
 public class RequestController {
 
     private final RequestService requestService;
-    private final BankController bankController;
+    private static  BankController bankController;
     private final EmailService emailService;
 
     /**
@@ -52,9 +53,11 @@ public class RequestController {
      @param emailService The EmailService component responsible for sending email notifications.
      */
     @Autowired
-    public RequestController(RequestService requestService, BankController bankController, EmailService emailService) {
+    public RequestController(final RequestService requestService,
+                             final BankController bankController,
+                             final EmailService emailService) {
         this.requestService = requestService;
-        this.bankController = bankController;
+        RequestController.bankController = bankController;
         this.emailService = emailService;
     }
 
@@ -75,6 +78,7 @@ public class RequestController {
         RestTemplate rt = new RestTemplate();
         Optional<CustomerResponse> customerOp = Optional.ofNullable(rt.getForObject(path, CustomerResponse.class));
         List<CustomerModel> customerModels;
+
         try {
            customerModels = requestService.calculateRisks(customerModel, customerOp, creditTime);
         }catch (DuplicateCustomerRequestException e) {
@@ -94,6 +98,7 @@ public class RequestController {
         } else {
 
             for (CustomerModel cm : customerModels) {
+                cm.getCustomerHistoryModel().getCreditModels().get(cm.getCustomerHistoryModel().getCreditModels().size() - 1).setRiskAccepted(true);
                 customerRequests.add(CustomerRequest.getFromModel(cm));
                 if (postAcceptedRequests(CustomerRequest.getFromModel(cm))) {
                     try {
@@ -104,6 +109,7 @@ public class RequestController {
                 }
             }
             for (CustomerModel cm : Portfolio.getNotIncludedCustomerModelLoans()) {
+                cm.getCustomerHistoryModel().getCreditModels().get(cm.getCustomerHistoryModel().getCreditModels().size() - 1).setRiskAccepted(true);
                 if(postNotAcceptedRequests(CustomerRequest.getFromModel(cm))) {
                     try {
                         emailService.sendEmailCustomers("merjvel e portfolioic", cm);
@@ -123,6 +129,8 @@ public class RequestController {
 
                 }
             }
+
+            System.out.println("Bank capital was 40_000_000 AMD now it's -> " + RequestService.capitalOfBank);
         }
 
         return customerRequests.stream().map(CustomerResponse::getFromRequest).toList();
@@ -139,6 +147,9 @@ public class RequestController {
      */
 
     private boolean postAcceptedRequests(final CustomerRequest customerRequest) {
+        RequestService.capitalOfBank = RequestService.capitalOfBank - Long.parseLong
+                (customerRequest.customerHistoryRequest().creditRequest().get(
+                        customerRequest.customerHistoryRequest().creditRequest().size() - 1).loanAmount());
         bankController.saveOrUpdateAcceptedCustomers(customerRequest);
         final String urlRejected = "http://localhost:8080/Customer/saveCustomerOrUpdateCredit"; // url of postMethod where is going to be passed CustomerRequest
         RestTemplate postRequest = new RestTemplate();
@@ -186,8 +197,10 @@ public class RequestController {
                 "0",
                 (byte) 0,
                 false,
+                false,
                 false
         ));
         return new CustomerModel(customerRequestFiltered, creditModels);
     }
+
 }

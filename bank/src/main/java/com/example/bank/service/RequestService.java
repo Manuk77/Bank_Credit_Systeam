@@ -5,6 +5,7 @@ import com.example.bank.bank_model.portfolio.CustomerWithMathModelFields;
 import com.example.bank.bank_model.portfolio.Portfolio;
 import com.example.bank.bank_model.default_calculating.CreditHistoryType;
 import com.example.bank.bank_model.default_calculating.CalculatingProbabilityOfDefault;
+import com.example.bank.controller.RequestController;
 import com.example.bank.custome_exceptions.DuplicateCustomerRequestException;
 import com.example.bank.customer.dto.CreditModel;
 import com.example.bank.customer.dto.CustomerModel;
@@ -46,7 +47,7 @@ public class RequestService {
     private final List<List<CustomerModel>> allCustomerModels = new ArrayList<>();
     public static List<ResultCustomerInfoModel> resultCustomerInfoModels = new ArrayList<>();
     private final CalculatingProbabilityOfDefault calculatingProbabilityOfDefault = new CalculatingProbabilityOfDefault();
-    private final Long capitalOfBank = 40_000_000L;
+    public static Long capitalOfBank = 40_000_000L;
     private static List<FilterCustomerInfo> filterCustomerInfos = new ArrayList<>();
 
     /**
@@ -309,7 +310,7 @@ public class RequestService {
             customerModels.get(i).getCustomerHistoryModel().getCreditModels().get(customerModels.get(i).getCustomerHistoryModel().getCreditModels().size() - 1).setCreditState(true);
             customerModels.get(i).getCustomerHistoryModel().getCreditModels().get(customerModels.get(i).getCustomerHistoryModel().getCreditModels().size() - 1).setAccepted(true);
             customerModels.get(i).getCustomerHistoryModel().setHasActiveCredit(true);
-            System.out.println(customerModels.get(i));
+            customerModels.get(i).getCustomerHistoryModel().getCreditModels().get(customerModels.get(i).getCustomerHistoryModel().getCreditModels().size() - 1).setRiskAccepted(true);
         }
         return customerModels;
     }

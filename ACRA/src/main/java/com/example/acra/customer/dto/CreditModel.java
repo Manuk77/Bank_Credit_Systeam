@@ -15,6 +15,7 @@ public class CreditModel {
     private Date endCreditDate;
     private Boolean creditState;
     private Boolean isAccepted;
+    private Boolean isRiskAccepted;
     private Byte percent;
 
 
@@ -31,6 +32,7 @@ public class CreditModel {
         this.paymentPerMonth = creditEntity.getPaymentPerMonth();
         this.creditState = creditEntity.getCreditState();
         this.isAccepted = creditEntity.getAccepted();
+        this.isRiskAccepted = creditEntity.getRiskAccepted();
 
     }
 
@@ -44,6 +46,7 @@ public class CreditModel {
         this.bankName = Banks.valueOf(creditRequest.bankName());
         this.creditState = Boolean.valueOf(creditRequest.creditState());
         this.isAccepted = Boolean.valueOf(creditRequest.isAccepted());
+        this.isRiskAccepted = Boolean.valueOf(creditRequest.isRiskAccepted());
     }
 
 
@@ -123,6 +126,14 @@ public class CreditModel {
 
     public void setPercent(Byte percent) {
         this.percent = percent;
+    }
+
+    public Boolean getRiskAccepted() {
+        return isRiskAccepted;
+    }
+
+    public void setRiskAccepted(Boolean riskAccepted) {
+        isRiskAccepted = riskAccepted;
     }
 
     @Override
