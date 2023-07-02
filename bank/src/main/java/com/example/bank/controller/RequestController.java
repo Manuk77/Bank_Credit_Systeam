@@ -72,6 +72,7 @@ public class RequestController {
      */
     @PostMapping("/risk")
     public @ResponseBody List<CustomerResponse> getInfo(@Valid @RequestBody final CustomerRequestFiltered customerRequestFiltered) {
+
         final String creditTime = customerRequestFiltered.creditRequest().creditTime();
         CustomerModel customerModel = getFromCustomerRequestFiltered(customerRequestFiltered);
         final String path = "http://localhost:8080/Customer/getInfo/" + customerRequestFiltered.passportRequest().passportNumber();
@@ -96,7 +97,6 @@ public class RequestController {
             }
             return List.of(CustomerResponse.getFromModel(customerModel));
         } else {
-
             for (CustomerModel cm : customerModels) {
                 cm.getCustomerHistoryModel().getCreditModels().get(cm.getCustomerHistoryModel().getCreditModels().size() - 1).setRiskAccepted(true);
                 customerRequests.add(CustomerRequest.getFromModel(cm));
@@ -128,12 +128,24 @@ public class RequestController {
                     bankController.saveResultOfCustomer(RequestService.resultCustomerInfoModels.get(i));
 
                 }
+                System.out.println("Bank capital was 40_000_000 AMD now it's -> " + RequestService.capitalOfBank);
             }
 
-            System.out.println("Bank capital was 40_000_000 AMD now it's -> " + RequestService.capitalOfBank);
         }
 
         return customerRequests.stream().map(CustomerResponse::getFromRequest).toList();
+    }
+
+    @PostMapping(value = "passList")
+    public List<CustomerResponse> callGetInfo(@Valid @RequestBody final List<CustomerRequestFiltered> customerRequestFiltered) {
+        List<CustomerResponse> customerResponses = null;
+        for (final CustomerRequestFiltered crf: customerRequestFiltered) {
+            customerResponses = getInfo(crf);
+            if (customerResponses.size() == 10)
+                break;
+
+        }
+        return customerResponses;
     }
 
 
