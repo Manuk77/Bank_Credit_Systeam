@@ -60,6 +60,8 @@ public class CreditModel {
         this.bankName = Banks.valueOf(creditRequest.bankName());
         this.creditState = Boolean.valueOf(creditRequest.creditState());
         this.isAccepted = Boolean.valueOf(creditRequest.isAccepted());
+        this.isRiskAccepted = Boolean.valueOf(creditRequest.isRiskAccepted());
+
     }
 
 

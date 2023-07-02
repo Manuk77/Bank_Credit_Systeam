@@ -2,7 +2,6 @@ package com.example.bank.customer.creating_requests.requests;
 
 import com.example.bank.customer.dto.CustomerModel;
 import com.example.bank.customer.response.CustomerResponse;
-import com.example.bank.validator.annotation.NotNullEmptyBlankString;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 
