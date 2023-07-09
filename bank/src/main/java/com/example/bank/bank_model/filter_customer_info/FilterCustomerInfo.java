@@ -35,10 +35,7 @@ public class FilterCustomerInfo {
 
     public static ModelOfRanking filterCustomerModel() {
 
-        List<CreditModel> creditModels = new ArrayList<>();
-        for (final CreditModel cm : customerHistoryModel.getCreditModels()) {
-            creditModels.add(cm);
-        }
+        List<CreditModel> creditModels = new ArrayList<>(customerHistoryModel.getCreditModels());
         customerModelFiltered.setCustomerIncome(customerIncome(creditModels, customerModelFiltered.getCustomerIncome()));
         return new ModelOfRanking(customerModelFiltered);
 

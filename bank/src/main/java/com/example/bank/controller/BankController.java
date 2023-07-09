@@ -1,10 +1,6 @@
 package com.example.bank.controller;
 
 
-
-import com.example.bank.bank_entity.BankEntity;
-import com.example.bank.bank_model.BankModel;
-import com.example.bank.customer.creating_requests.requests.CreditRequest;
 import com.example.bank.customer.creating_requests.requests.CustomerRequest;
 import com.example.bank.customer.dto.*;
 import com.example.bank.customer.response.*;
@@ -13,10 +9,7 @@ import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
-import java.sql.Date;
-import java.util.Optional;
 
 /**
  * Represents a REST ful API for banking operations.
@@ -61,7 +54,7 @@ public class BankController {
     @PostMapping(value = "saveOrUpdateRejectedCustomers")
     public @ResponseBody CustomerResponse saveOrUpdateRejectedCustomers(@Valid @RequestBody final CustomerRequest customerRequest){
         // RestTemplate if it rejected
-           if (bankService.saveCustomer(
+           if (bankService.saveNotAcceptedCustomerCredit(
                    new AddressModel(customerRequest.addressRequest()),
                    new PassportModel(customerRequest.passportRequest()),
                    new CustomerInfoModel(customerRequest.customerInfoRequest()),
@@ -82,7 +75,7 @@ public class BankController {
     public @ResponseBody CustomerResponse saveOrUpdateAcceptedCustomers(@Valid @RequestBody final CustomerRequest customerRequest) {
         // RestTemplate getFrom ACRA
 
-        if (bankService.saveCustomer(new AddressModel(customerRequest.addressRequest()),
+        if (bankService.saveAcceptedCustomerCredit(new AddressModel(customerRequest.addressRequest()),
                 new PassportModel(customerRequest.passportRequest()),
                 new CustomerInfoModel(customerRequest.customerInfoRequest()),
                 new CustomerHistoryModel(customerRequest.customerHistoryRequest()),

@@ -1,5 +1,6 @@
 package com.example.bank.controller;
 
+import com.example.bank.bank_model.default_calculating.CalculatingProbabilityOfDefault;
 import com.example.bank.bank_model.portfolio.Portfolio;
 import com.example.bank.custome_exceptions.DuplicateCustomerRequestException;
 import com.example.bank.customer.bank.Banks;
@@ -42,11 +43,10 @@ import java.util.Optional;
 public class RequestController {
 
     private final RequestService requestService;
-    private static  BankController bankController;
+    private static BankController bankController;
     private final EmailService emailService;
 
     /**
-
      Constructs a new RequestController with the provided dependencies.
      @param requestService The RequestService component responsible for managing customer requests.
      @param bankController The BankController component responsible for handling bank-related operations.
@@ -118,7 +118,10 @@ public class RequestController {
                     }
                 }
             }
+
             if (RequestService.resultCustomerInfoModels.size() == 10) {
+                Portfolio.getNotIncludedCustomerModelLoans().clear();
+                RequestService.calculatingProbabilityOfDefault = new CalculatingProbabilityOfDefault();
                 for (int i = 0; i < RequestService.resultCustomerInfoModels.size(); ++i) {
                     RequestService.resultCustomerInfoModels.get(i).setY(Portfolio.y.get(i));
                     if (i == 0) {
@@ -128,7 +131,8 @@ public class RequestController {
                     bankController.saveResultOfCustomer(RequestService.resultCustomerInfoModels.get(i));
 
                 }
-                System.out.println("Bank capital was 40_000_000 AMD now it's -> " + RequestService.capitalOfBank);
+                RequestService.resultCustomerInfoModels.clear();
+                System.out.println("Bank capital was 40_000_000 AMD now it's -> " + RequestService.capitalOfBank + " AMD");
             }
 
         }
@@ -141,9 +145,6 @@ public class RequestController {
         List<CustomerResponse> customerResponses = null;
         for (final CustomerRequestFiltered crf: customerRequestFiltered) {
             customerResponses = getInfo(crf);
-            if (customerResponses.size() == 10)
-                break;
-
         }
         return customerResponses;
     }

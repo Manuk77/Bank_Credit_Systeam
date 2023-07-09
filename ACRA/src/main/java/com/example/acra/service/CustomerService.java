@@ -65,13 +65,12 @@ public class CustomerService {
                                                  final WorkingPlaceModel workingPlaceModel) {
 
         Optional<CustomerEntity> customerEntity = getCustomer(passportModel.getPassportNumber());
-            if (!customerEntity.isPresent())
+            if (customerEntity.isEmpty())
                 return saveAllEntities(new AddressEntity(addressModel), new PassportEntity(passportModel ),
                         new WorkingPlaceEntity(workingPlaceModel), new CustomerHistoryEntity(customerHistory),
                         customerInfoModel, castToCreditEntity(customerHistory.getCreditModels()));
-        if (customerEntity.get().getCustomerHistory().getCredits().size() == customerHistory.getCreditModels().size())
-            return false;
-        return addNewCredit(customerHistory.getCreditModels().get(customerHistory.getCreditModels().size() - 1), customerEntity);
+
+        return addNewCredit(customerHistory.getCreditModels().get(customerHistory.getCreditModels().size() - 1), customerEntity.get());
     }
 
     /**
@@ -81,9 +80,9 @@ public class CustomerService {
      * @param customerEntity  The passport number of the customer.
      * @return `true` if the new credit is successfully added, `false` otherwise.
      */
-    public Boolean addNewCredit(final CreditModel creditModel, final Optional<CustomerEntity> customerEntity) {
-        CreditEntity creditEntity = new CreditEntity(creditModel);
-        creditEntity.setCustomerHistoryEntity(customerEntity.get().getCustomerHistory());
+    public Boolean addNewCredit(final CreditModel creditModel, final CustomerEntity customerEntity) {
+        final CreditEntity creditEntity = new CreditEntity(creditModel);
+        creditEntity.setCustomerHistoryEntity(customerEntity.getCustomerHistory());
         creditRepository.save(creditEntity);
         return true;
     }

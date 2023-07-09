@@ -11,8 +11,7 @@ import java.util.List;
 public class CalculatingProbabilityOfDefault {
     private RankedModel rankedModel;
     private String creditTime;
-    
-    public List<Double> PD = new ArrayList<>(); // Probability of Default (PD) values
+    public static List<Double> PD = new ArrayList<>(); // Probability of Default (PD) values
     public static List<String> creditTimes = new ArrayList<>();
 
     /**
@@ -122,6 +121,11 @@ public class CalculatingProbabilityOfDefault {
         return false;
     }
 
+    public static void newListPD() {
+        PD = new ArrayList<>();
+    }
 
-    
+    public static List<String> getCreditTimes() {
+        return creditTimes;
+    }
 }

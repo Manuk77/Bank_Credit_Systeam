@@ -12,7 +12,6 @@ import java.util.Optional;
 
 /**
  * Service class that provides banking operations related to customers and their information.
- *
  * This class is responsible for managing customer information, including retrieval, saving, and credit operations.
  * It interacts with various repositories to persist and retrieve data related to customers, addresses, passports,
  * working places, customer histories, and credits.
@@ -90,29 +89,40 @@ public class BankService {
      * @param workingPlaceModel The working place model containing the customer's working place information.
      * @return {@code true} if the customer information is successfully saved or updated, {@code false} otherwise.
      */
-    public boolean saveCustomer(final AddressModel addressModel,
-                                final PassportModel passportModel,
-                                final CustomerInfoModel customerInfoModel,
-                                final CustomerHistoryModel customerHistory,
-                                final WorkingPlaceModel workingPlaceModel) {
+    public boolean saveAcceptedCustomerCredit(final AddressModel addressModel,
+                                              final PassportModel passportModel,
+                                              final CustomerInfoModel customerInfoModel,
+                                              final CustomerHistoryModel customerHistory,
+                                              final WorkingPlaceModel workingPlaceModel) {
 
         Optional<CustomerEntity> customerEntity = getCustomer(passportModel.getPassportNumber());
-        if (customerEntity.isEmpty()) {
-            return saveAllEntities(new AddressEntity(addressModel), new PassportEntity(passportModel ),
-                    new WorkingPlaceEntity(workingPlaceModel), new CustomerHistoryEntity(customerHistory),
-                    customerInfoModel, mapToCreditEntity(customerHistory.getCreditModels()));
+        if (customerEntity.isPresent()) {
+            customerEntity.get().getCustomerHistory().setCreditScore(customerHistory.getCreditScore());
+            customerEntity.get().getCustomerHistory().setHasActiveCredit(true);
+            customerHistoryRepository.save(customerEntity.get().getCustomerHistory());
+            return addNewAcceptedCredit(customerHistory.getCreditModels().get(customerHistory.getCreditModels().size() - 1), customerEntity.get());
         }
+        return saveAllEntities(new AddressEntity(addressModel), new PassportEntity(passportModel),
+                new WorkingPlaceEntity(workingPlaceModel), new CustomerHistoryEntity(customerHistory),
+                customerInfoModel, mapToCreditEntity(customerHistory.getCreditModels()));
 
+    }
 
-        for (CreditEntity customer : customerEntity.get().getCustomerHistory().getCredits()) {
-            if(customer.getAccepted() || !customer.getAccepted() && customerHistory.getCreditModels().get(0).equals(new CreditModel(customer))){
-                return false;
-            }
-
+    public boolean saveNotAcceptedCustomerCredit(final AddressModel addressModel,
+                                                 final PassportModel passportModel,
+                                                 final CustomerInfoModel customerInfoModel,
+                                                 final CustomerHistoryModel customerHistory,
+                                                 final WorkingPlaceModel workingPlaceModel) {
+        Optional<CustomerEntity> customerEntity = getCustomer(passportModel.getPassportNumber());
+        if (customerEntity.isPresent()) {
+            customerEntity.get().getCustomerHistory().setCreditScore(customerHistory.getCreditScore());
+            customerHistoryRepository.save(customerEntity.get().getCustomerHistory());
+            return addRejectedCredit(customerHistory.getCreditModels().get(customerHistory.getCreditModels().size() - 1), customerEntity.get());
         }
+        return saveAllEntities(new AddressEntity(addressModel), new PassportEntity(passportModel),
+                new WorkingPlaceEntity(workingPlaceModel), new CustomerHistoryEntity(customerHistory),
+                customerInfoModel, mapToCreditEntity(customerHistory.getCreditModels()));
 
-
-        return addNewCredit(customerHistory.getCreditModels().get(customerHistory.getCreditModels().size() - 1), customerEntity.get());
     }
 
     /**
@@ -122,12 +132,18 @@ public class BankService {
      * @param customerEntity The passport number of the customer.
      * @return true if the credit is successfully added for the customer, false otherwise.
      */
-    public boolean addNewCredit(final CreditModel creditModel, final CustomerEntity customerEntity) {
-        CreditEntity creditEntity = new CreditEntity(creditModel);
+    public boolean addNewAcceptedCredit(final CreditModel creditModel, final CustomerEntity customerEntity) {
+        final CreditEntity creditEntity = new CreditEntity(creditModel);
         creditEntity.setCustomerHistoryEntity(customerEntity.getCustomerHistory());
         creditRepository.save(creditEntity);
         return true;
+    }
 
+    public boolean addRejectedCredit(final CreditModel creditModel, final CustomerEntity customerEntity) {
+        final CreditEntity creditEntity = new CreditEntity(creditModel);
+        creditEntity.setCustomerHistoryEntity(customerEntity.getCustomerHistory());
+        creditRepository.save(creditEntity);
+        return true;
     }
 
 
