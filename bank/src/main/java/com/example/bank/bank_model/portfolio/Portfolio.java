@@ -16,7 +16,7 @@ import java.util.*;
  */
 public class Portfolio {
     private List<CustomerModel> customerModels;
-    private static final List<CustomerModel> notIncludedCustomerModelLoans = new ArrayList<>();
+    private static List<CustomerModel> notIncludedCustomerModelLoans = new ArrayList<>();
     private List<CustomerWithMathModelFields> customersMath;
     public static List<Integer> y;
     private static Double Sum = Double.MAX_VALUE;
@@ -147,7 +147,7 @@ public class Portfolio {
 
         }
         System.out.println("acceptable customer loan count is -> " + j);
-        System.out.println("portfeli ekamtaberutyun -> " + this.R);
+        System.out.println("portfeli ekamtaberutyun -> " + R);
         return optimalLoans;
     }
 
@@ -162,9 +162,9 @@ public class Portfolio {
      * Example of generating binary lists:
      * [1, 0, 0, 0, ..., 0]
      * [0, 1, 0, 0, ..., 0]
-     * .  .  .  .  ...  .
-     * .  .  .  .  ...  .
-     * .  .  .  .  ...  .
+     *  .  .  .  .  ...  .
+     *  .  .  .  .  ...  .
+     *  .  .  .  .  ...  .
      * [1, 1, 1, 1, ..., 1]
      */
     private void allPossibleOptions() {

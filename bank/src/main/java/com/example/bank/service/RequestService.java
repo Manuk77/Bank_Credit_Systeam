@@ -43,10 +43,10 @@ import java.util.Optional;
 @Service
 public class RequestService {
     private static int countOfRequests;
-    private static final List<CustomerModel> customerModels = new ArrayList<>();
+    private static List<CustomerModel> customerModels = new ArrayList<>();
     private final List<List<CustomerModel>> allCustomerModels = new ArrayList<>();
     public static List<ResultCustomerInfoModel> resultCustomerInfoModels = new ArrayList<>();
-    private final CalculatingProbabilityOfDefault calculatingProbabilityOfDefault = new CalculatingProbabilityOfDefault();
+    public static CalculatingProbabilityOfDefault calculatingProbabilityOfDefault = new CalculatingProbabilityOfDefault();
     public static Long capitalOfBank = 40_000_000L;
     private static List<FilterCustomerInfo> filterCustomerInfos = new ArrayList<>();
 
@@ -88,6 +88,7 @@ public class RequestService {
                     resultCustomerInfoModels.get(0).setL(Portfolio.getSum());
                     resultCustomerInfoModels.get(0).setR(Portfolio.getR());
                     customerModels.clear();
+                    filterCustomerInfos.clear();
                     return addingMissingFieldsOfCredit(customerModels1, CalculatingProbabilityOfDefault.creditTimes);
                 }
                 // portfolio optimization
@@ -116,6 +117,7 @@ public class RequestService {
         filterCustomerInfos.add(filterCustomerInfo);
         resultCustomerInfoModels.add(new ResultCustomerInfoModel(filterCustomerInfo.getCustomerModelFiltered()));
         //rankedModels.add(FilterCustomerInfo.filterCustomerRequest().rankedModel());
+
         calculatingProbabilityOfDefault.setRankedModels(FilterCustomerInfo.filterCustomerModelOrElse().rankedModel(), creditTime);
         if (calculatingProbabilityOfDefault.allRiskCalculations()) {
             customerModels.add(customerModel);
@@ -172,7 +174,7 @@ public class RequestService {
         if (calculatingProbabilityOfDefault.allRiskCalculations()) {
             // customerResponse converts or maps to customerRequest
             // eli ban ka avelcnelu
-            customerModels.add(new CustomerModel(customerResponse));
+            customerModels.add(customerModel1);
             return true;
         }
         return false;
@@ -187,7 +189,7 @@ public class RequestService {
      * Pi is calculated as PD[i] * ((1 - LGD) + (1 - PD[i])) / (1 + Rf) * LoanAmount,
      * where LoanAmount is obtained from the latest credit model of the corresponding customer.
      * Ri is calculated as (LoanAmount / Pi[i]) - 1.
-     * Wi is calculated as LocustomerModels.forEach(customerModel1 -> {
+     * Wi is calculated as customerModels.forEach(customerModel1 -> {
      * if (customerModel1.equals(customerModel))
      * <p>
      * }) ;anAmount / capitalOfBank, where capitalOfBank is a constant.
@@ -207,7 +209,7 @@ public class RequestService {
         double[] Wi = new double[PD.size()];
         double[] Sigma = new double[PD.size()];
 
-        for (int i = 0; i < PD.size(); ++i) {
+        for (int i = 0; i < 10; ++i) {
             Pi[i] = PD.get(i) * ((1 - LGD) + (1 - PD.get(i))) / (1 + Rf) *
                     Double.parseDouble(customerModels.get(i).getCustomerHistoryModel().getCreditModels().
                             get(customerModels.get(i).getCustomerHistoryModel().getCreditModels().size() - 1).getLoanAmount());

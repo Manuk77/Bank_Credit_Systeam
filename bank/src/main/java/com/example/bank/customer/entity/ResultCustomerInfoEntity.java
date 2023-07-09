@@ -32,7 +32,7 @@ public class ResultCustomerInfoEntity {
     private Integer creditTime;
     @Column(name = "y", nullable = false, length = 15)
     private Integer y;
-    @Column(name = "Risk_L", length = 15)
+    @Column(name = "risk_L", length = 15)
     private Double L;
     @Column(name = "R", length = 15)
     private  Double R;
