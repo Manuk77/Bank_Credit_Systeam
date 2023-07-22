@@ -28,11 +28,8 @@ public class ValidExpiryDate implements ConstraintValidator<com.example.bank.val
 
         Period period = Period.between(expiryDate, issueDate);
         int year = period.getYears();
-        System.out.println(year);
         int month = period.getMonths();
-        System.out.println(month);
         int day = period.getDays();
-        System.out.println(day);
         return year == -10 && month == 0 && day == 0;
     }
 }

@@ -111,9 +111,9 @@ public class CalculatingProbabilityOfDefault {
      *         DPt is the probability of default set by the bank.
      */
     private boolean logisticModel(final Double y) {
-        final double DPt = 0.58;
+        final double DPt = 0.59;
         double x = 1 - (1 / (1 + Math.pow(Math.E, y)));
-        System.out.println("PDi = " + x);
+//        System.out.println("PDi = " + x);
         if (x > DPt) {
             PD.add(x);
             return true;
