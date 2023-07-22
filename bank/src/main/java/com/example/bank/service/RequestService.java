@@ -82,7 +82,17 @@ public class RequestService {
             if (countOfRequests == 10) {
                 countOfRequests = 0;
                 Portfolio portfolio = new Portfolio(customerModels, getMathModelFields(calculatingProbabilityOfDefault.getPD()));
-                List<CustomerModel> customerModels1 = portfolio.getOptimalCustomersList();
+                List<CustomerModel> customerModels1 = null;
+                try {
+                   customerModels1  = portfolio.getOptimalCustomersList();
+                }catch (NullPointerException e) {
+                    allCustomerModels.add(customerModels);
+                    resultCustomerInfoModels.get(0).setL(Portfolio.getSum());
+                    resultCustomerInfoModels.get(0).setR(Portfolio.getR());
+                    customerModels.clear();
+                    filterCustomerInfos.clear();
+                    throw new NullPointerException("portfolios profitability is less than 0.07");
+                }
                 if (customerModels1 != null) {
                     allCustomerModels.add(customerModels);
                     resultCustomerInfoModels.get(0).setL(Portfolio.getSum());
@@ -116,7 +126,6 @@ public class RequestService {
         FilterCustomerInfo filterCustomerInfo = new FilterCustomerInfo(getModelForRanking(customerModel, creditTime));
         filterCustomerInfos.add(filterCustomerInfo);
         resultCustomerInfoModels.add(new ResultCustomerInfoModel(filterCustomerInfo.getCustomerModelFiltered()));
-        //rankedModels.add(FilterCustomerInfo.filterCustomerRequest().rankedModel());
 
         calculatingProbabilityOfDefault.setRankedModels(FilterCustomerInfo.filterCustomerModelOrElse().rankedModel(), creditTime);
         if (calculatingProbabilityOfDefault.allRiskCalculations()) {
@@ -146,6 +155,7 @@ public class RequestService {
      * @param creditTime       The credit time for the risk calculations.
      * @return True if the risks are calculated successfully and meet the conditions, false otherwise.
      */
+
     private boolean getAnswer(final CustomerModel customerModel,
                               final CustomerResponse customerResponse,
                               final String creditTime) {
@@ -275,19 +285,19 @@ public class RequestService {
      * @return The corresponding CreditHistoryType based on the credit score.
      */
     private static CreditHistoryType getCreditHistoryType(final int creditScore) {
-        int score = creditScore;
-        if (score > 299 && score < 580)
+        if (creditScore > 299 && creditScore < 580)
             return CreditHistoryType.POOR;
-        if (score > 579 && score < 670)
+        if (creditScore > 579 && creditScore < 670)
             return CreditHistoryType.FAIR;
-        if (score > 669 && score < 740)
+        if (creditScore > 669 && creditScore < 740)
             return CreditHistoryType.GOOD;
-        if (score > 739 && score < 800)
+        if (creditScore > 739 && creditScore < 800)
             return CreditHistoryType.VERY_GOOD;
-        if (score > 799 && score < 851)
+        if (creditScore > 799 && creditScore < 851)
             return CreditHistoryType.EXCEPTIONAL;
         return CreditHistoryType.POOR;
     }
+
 
     /**
      * Adds missing fields of credit to the provided list of CustomerModels.

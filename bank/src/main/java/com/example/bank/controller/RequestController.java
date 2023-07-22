@@ -82,7 +82,13 @@ public class RequestController {
 
         try {
            customerModels = requestService.calculateRisks(customerModel, customerOp, creditTime);
-        }catch (DuplicateCustomerRequestException e) {
+        }catch (DuplicateCustomerRequestException  e) {
+            System.out.println(e.getMessage());
+            return null;
+        }catch (NullPointerException e) {
+            Portfolio.getNotIncludedCustomerModelLoans().clear();
+            RequestService.calculatingProbabilityOfDefault = new CalculatingProbabilityOfDefault();
+            RequestService.resultCustomerInfoModels.clear();
             System.out.println(e.getMessage());
             return null;
         }
